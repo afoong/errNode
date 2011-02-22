@@ -1,0 +1,47 @@
+PORT = 8024;
+DBPORT = 27017;
+
+HOST = 'li21-127.members.linode.com';
+
+var sys = require('sys'),
+http = require('http'),
+Db = require('mongodb').Db,
+Server = require('mongodb').Server,
+Connection = require('mongodb').Connection,
+BSON = require('mongodb').BSONNative;
+
+sys.puts("now connecting to " + HOST + " at " + DBPORT);
+
+var count = 0;
+
+var numInto = function (num) {
+	count = num;
+}
+
+http.createServer(function(req, res) {
+	res.writeHead(200, {
+		'Content-Type': 'text/plain'
+	});
+	res.write('Hello World\n');
+
+var db = new Db('errrecorderdb', new Server(HOST, DBPORT, {}), {});
+
+db.open(function(err, db) {
+   db.collection('errors', function(err, collection) {
+      collection.count(function(err, c) {
+	 numInto(c); 
+	 
+	 sys.puts("There are " + count + " records in the errors collection");
+	 // but res doesnt exist in this function.. what to do?
+	});
+   });
+});
+	res.write("There are " + count + " records in the errors collection");
+	res.close();
+
+}).listen(PORT, HOST);
+
+sys.puts("Server at http://" + HOST + ':' + PORT.toString() + '/');
+sys.puts('Hello NodeJS');
+
+y
