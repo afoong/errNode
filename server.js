@@ -20,7 +20,7 @@ function getType(callback) {
    var e;    
   
   function doSomething() {  
-    console.log(type);
+    console.log(e);
     callback(e);
   }  
 db.open(function(err, db) {
