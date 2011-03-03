@@ -40,11 +40,8 @@ http.createServer(function(req, res) {
 	         sys.puts("There are " + count + " records in the errors collection");
 	      });
       });
-   });
 
-   
-   db.open(function(err, nextDb) {
-      nextDb.collection('errors', function(err, collection) {   
+      thisDb.collection('errors', function(err, collection) {   
          collection.find({}, {limit:5, sort:[['time', -1]]}, function(err, cursor) {  
            cursor.each(function(err, error) {  
              getType(error);
@@ -54,6 +51,7 @@ http.createServer(function(req, res) {
          });  
       }); 
    });
+
    
 	res.write("There are " + count + " records in the errors collection");
 	if(e) {
