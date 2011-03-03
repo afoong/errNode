@@ -4,8 +4,6 @@ DBPORT = 27017;
 //HOST = 'localhost';
 HOST = 'li21-127.members.linode.com';
 
-{ "_id" : ObjectId("4d30c8273f541d6500000020"), "group-id" : ObjectId("4d30c8273f541d650000001f"), "msg" : "/: division by zero", "time" : "1288720506", "type" : "exn:fail:contract:divide-by-zero" }
-
 var sys = require('sys'),
 http = require('http'),
 Db = require('mongodb').Db,
