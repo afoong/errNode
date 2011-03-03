@@ -25,7 +25,7 @@ function getType(callback) {
   }  
   
 db.collection('errors', function(err, collection) {   
-   collection.find({}, {}, {limit:5, sort[['time', -1]]}, function(err, cursor) {  
+   collection.find({}, {}, {limit:5, sort{['time', -1]}}, function(err, cursor) {  
      cursor.toArray(function(err, error) {  
        e = error;  
        doSomething();  
