@@ -48,7 +48,7 @@ http.createServer(function(req, res) {
 
    db = new Db('errrecorderdb', new Server(HOST, DBPORT, {}), {});
    getType(function(er){
-      sys.puts("the type is "+er.type+"\n");
+      sys.puts("the error is "+er+"\n");
    });
 
    //db.open(function(err, db) {
