@@ -4,6 +4,8 @@ DBPORT = 27017;
 //HOST = 'localhost';
 HOST = 'li21-127.members.linode.com';
 
+{ "_id" : ObjectId("4d30c8273f541d6500000020"), "group-id" : ObjectId("4d30c8273f541d650000001f"), "msg" : "/: division by zero", "time" : "1288720506", "type" : "exn:fail:contract:divide-by-zero" }
+
 var sys = require('sys'),
 http = require('http'),
 Db = require('mongodb').Db,
@@ -16,12 +18,12 @@ sys.puts("now connecting to " + HOST + " at " + DBPORT);
 
 var count = 0;
 
-function getType(callback) {  
+function getType(callback, res) {  
    var e;    
   
   function doSomething() {  
     //console.log(e);
-    callback(e);
+    callback(e, res);
   }  
 db.open(function(err, db) {
    db.collection('errors', function(err, collection) {   
@@ -47,23 +49,24 @@ http.createServer(function(req, res) {
 	res.write('Hello World\n');
 
    db = new Db('errrecorderdb', new Server(HOST, DBPORT, {}), {});
-   getType(function(er){
+   getType(function(er, res){
       if(er) {
          sys.puts("error is ");
          console.log(er['type'] + " -> " + er['msg']);
          sys.puts("\n");
+         res.write(er);
       }
    });
 
-   //db.open(function(err, db) {
-   //   db.collection('errors', function(err, collection) {
-   //      collection.count(function(err, c) {
-	//        numInto(c); 
-	//    
-	//         sys.puts("There are " + count + " records in the errors collection");
-	//      });
-   //   });
-   //});
+   db.open(function(err, db) {
+      db.collection('errors', function(err, collection) {
+         collection.count(function(err, c) {
+	        numInto(c); 
+	    
+	         sys.puts("There are " + count + " records in the errors collection");
+	      });
+      });
+   });
    
 	res.write("There are " + count + " records in the errors collection");
 	res.end();
