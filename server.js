@@ -1,7 +1,8 @@
 PORT = 8024;
 DBPORT = 27017;
 
-HOST = 'li21-127.members.linode.com';
+HOST = 'localhost';
+//HOST = 'li21-127.members.linode.com';
 
 var sys = require('sys'),
 http = require('http'),
@@ -37,7 +38,7 @@ db.open(function(err, db) {
    });
 });
 	res.write("There are " + count + " records in the errors collection");
-	res.close();
+	res.end();
 
 }).listen(PORT, HOST);
 
