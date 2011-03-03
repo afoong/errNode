@@ -34,6 +34,8 @@ db.collection('errors', function(err, collection) {
    }); 
 });
 
+}
+
 var numInto = function (num) {
 	count = num;
 }
