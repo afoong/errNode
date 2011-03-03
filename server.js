@@ -47,7 +47,7 @@ http.createServer(function(req, res) {
 	res.write('Hello World\n');
 
 
-   getType(res, function(er){
+   getType(function(er){
       sys.puts("the type is "+er['type']+"\n");
    });
 
