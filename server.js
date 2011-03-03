@@ -16,18 +16,12 @@ sys.puts("now connecting to " + HOST + " at " + DBPORT);
 
 var count = 0;
 
-function getType(res, callback) {  
-   var e;  
-
-	res.writeHead(200, {
-		'Content-Type': 'text/plain'
-	});
-  
+function getType(callback) {  
+   var e;    
   
   function doSomething() {  
     console.log(type);
-    res.write("the type is "+e['type']+"\n");
-    callback(res);
+    callback(e);
   }  
   
 db.collection('errors', function(err, collection) {   
@@ -51,8 +45,8 @@ http.createServer(function(req, res) {
 	res.write('Hello World\n');
 
 
-   getType(res, function(res){
-      res.end();
+   getType(res, function(er){
+      sys.puts("the type is "+er['type']+"\n");
    });
 
    //db.open(function(err, db) {
