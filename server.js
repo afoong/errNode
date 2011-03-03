@@ -54,6 +54,9 @@ http.createServer(function(req, res) {
       sys.puts("error 2 is ");
       console.log(er[1]['type']);
       sys.puts("\n");
+      sys.puts("error 3 is ");
+      console.log(er[2]['type']);
+      sys.puts("\n");
    });
 
    //db.open(function(err, db) {
