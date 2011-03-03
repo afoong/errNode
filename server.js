@@ -24,13 +24,13 @@ function getType(callback) {
     callback(e);
   }  
 db.open(function(err, db) {
-db.collection('errors', function(err, collection) {   
-   collection.find({}, {limit:5, sort:[['time', -1]]}, function(err, cursor) {  
-     cursor.toArray(function(err, error) {  
-       e = error;  
-       doSomething();  
+   db.collection('errors', function(err, collection) {   
+      collection.find({}, {limit:5, sort:[['time', -1]]}, function(err, cursor) {  
+        cursor.toArray(function(err, error) {  
+          e = error;  
+          doSomething();  
+         });  
       });  
-    });  
    }); 
 });
 
@@ -46,7 +46,7 @@ http.createServer(function(req, res) {
 	});
 	res.write('Hello World\n');
 
-
+   db = new Db('errrecorderdb', new Server(HOST, DBPORT, {}), {});
    getType(function(er){
       sys.puts("the type is "+er['type']+"\n");
    });
