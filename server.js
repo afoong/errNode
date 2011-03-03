@@ -45,8 +45,10 @@ http.createServer(function(req, res) {
          collection.find({}, {limit:5, sort:[['time', -1]]}, function(err, cursor) {  
            cursor.each(function(err, error) {  
              getType(error);
-             
-             console.log(error['type'] + " -> " + error['msg']);
+
+             if(error) {
+               console.log(error['type'] + " -> " + error['msg']);
+             }
             });  
          });  
       }); 
