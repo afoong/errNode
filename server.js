@@ -23,7 +23,7 @@ function getType(callback) {
     console.log(type);
     callback(e);
   }  
-  
+db.open(function(err, db) {
 db.collection('errors', function(err, collection) {   
    collection.find({}, {limit:5, sort:[['time', -1]]}, function(err, cursor) {  
      cursor.toArray(function(err, error) {  
@@ -32,7 +32,7 @@ db.collection('errors', function(err, collection) {
       });  
     });  
    }); 
-}
+});
 
 var numInto = function (num) {
 	count = num;
