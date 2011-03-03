@@ -19,24 +19,31 @@ var numInto = function (num) {
 	count = num;
 }
 
+var db = new Db('errrecorderdb', new Server(HOST, DBPORT, {}), {});
+
+var x = function() {
+   db.open(function(err, db) {
+      db.collection('errors', function(err, collection) {
+         collection.count(function(err, c) {
+	    numInto(c); 
+	    
+	    sys.puts("There are " + count + " records in the errors collection");
+	    // but res doesnt exist in this function.. what to do?
+	   });
+      });
+   });
+}
+
+x();
+
 http.createServer(function(req, res) {
 	res.writeHead(200, {
 		'Content-Type': 'text/plain'
 	});
 	res.write('Hello World\n');
 
-var db = new Db('errrecorderdb', new Server(HOST, DBPORT, {}), {});
+   x();
 
-db.open(function(err, db) {
-   db.collection('errors', function(err, collection) {
-      collection.count(function(err, c) {
-	 numInto(c); 
-	 
-	 sys.puts("There are " + count + " records in the errors collection");
-	 // but res doesnt exist in this function.. what to do?
-	});
-   });
-});
 	res.write("There are " + count + " records in the errors collection");
 	res.end();
 
