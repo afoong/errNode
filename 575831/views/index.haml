@@ -1,0 +1,8 @@
+%h1= title
+#errors
+  - each error in errors
+    %div.error
+      %div.time= error.time
+      %div.type
+        %a{href: "/err/" + error._id.toHexString()}= error.type 
+      %div.msg= error.msg

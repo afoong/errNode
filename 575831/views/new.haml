@@ -1,0 +1,11 @@
+%h1= title
+%form{method: 'post', action: '/err/new'}
+  %div
+    %div
+      %span Type :
+      %input{type: 'text', name: 'type', id: 'editErrorType'}
+    %div
+      %span Msg :
+        %textarea{name: 'msg', rows: 20, id: 'editErrorMsg'}
+    %div#editErrorSubmit
+      %input{type: 'submit', value: 'Send'}
