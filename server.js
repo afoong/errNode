@@ -20,7 +20,7 @@ function getType(callback) {
    var e;    
   
   function doSomething() {  
-    console.log(e);
+    //console.log(e);
     callback(e);
   }  
 db.open(function(err, db) {
@@ -48,7 +48,7 @@ http.createServer(function(req, res) {
 
    db = new Db('errrecorderdb', new Server(HOST, DBPORT, {}), {});
    getType(function(er){
-      sys.puts("the type is "+er['type']+"\n");
+      sys.puts("the type is "+er.type+"\n");
    });
 
    //db.open(function(err, db) {
