@@ -1,0 +1,4 @@
+#!/bin/bash
+
+nohup node server.js > log.out 2> log.err < /dev/null & 
+
