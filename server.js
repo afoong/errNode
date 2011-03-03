@@ -26,7 +26,7 @@ function getType(callback) {
 db.open(function(err, db) {
    db.collection('errors', function(err, collection) {   
       collection.find({}, {limit:5, sort:[['time', -1]]}, function(err, cursor) {  
-        cursor.toArray(function(err, error) {  
+        cursor.each(function(err, error) {  
           e = error;  
           doSomething();  
          });  
@@ -49,13 +49,7 @@ http.createServer(function(req, res) {
    db = new Db('errrecorderdb', new Server(HOST, DBPORT, {}), {});
    getType(function(er){
       sys.puts("error 1 is ");
-      console.log(er[0]['type']);
-      sys.puts("\n");
-      sys.puts("error 2 is ");
-      console.log(er[1]['type']);
-      sys.puts("\n");
-      sys.puts("error 3 is ");
-      console.log(er[2]['type']);
+      console.log(er.type + " -> " er.msg);
       sys.puts("\n");
    });
 
