@@ -9,31 +9,15 @@ http = require('http'),
 Db = require('mongodb').Db,
 Server = require('mongodb').Server,
 Connection = require('mongodb').Connection,
-BSON = require('mongodb').BSONNative,
-db = new Db('errrecorderdb', new Server(HOST, DBPORT, {}), {});
+BSON = require('mongodb').BSONNative;
 
 sys.puts("now connecting to " + HOST + " at " + DBPORT);
 
 var count = 0;
+var e;
 
-function getType(callback, res) {  
-   var e;    
-  
-  function doSomething() {  
-    //console.log(e);
-    callback(e, res);
-  }  
-db.open(function(err, db) {
-   db.collection('errors', function(err, collection) {   
-      collection.find({}, {limit:5, sort:[['time', -1]]}, function(err, cursor) {  
-        cursor.each(function(err, error) {  
-          e = error;  
-          doSomething();  
-         });  
-      });  
-   }); 
-});
-
+var getType = function (error) {    
+   e = error;
 }
 
 var numInto = function (num) {
@@ -47,17 +31,9 @@ http.createServer(function(req, res) {
 	res.write('Hello World\n');
 
    db = new Db('errrecorderdb', new Server(HOST, DBPORT, {}), {});
-   getType(function(er, res){
-      if(er) {
-         sys.puts("error is ");
-         console.log(er['type'] + " -> " + er['msg']);
-         sys.puts("\n");
-         res.write(er);
-      }
-   });
 
-   db.open(function(err, db) {
-      db.collection('errors', function(err, collection) {
+   db.open(function(err, thisDb) {
+      thisDb.collection('errors', function(err, collection) {
          collection.count(function(err, c) {
 	        numInto(c); 
 	    
@@ -65,8 +41,22 @@ http.createServer(function(req, res) {
 	      });
       });
    });
+
+   
+   db.open(function(err, db) {
+      db.collection('errors', function(err, collection) {   
+         collection.find({}, {limit:5, sort:[['time', -1]]}, function(err, cursor) {  
+           cursor.each(function(err, error) {  
+             getType(error);
+             
+             console.log(error['type'] + " -> " + error['msg']);
+            });  
+         });  
+      }); 
+   });
    
 	res.write("There are " + count + " records in the errors collection");
+	res.write(e['type'] + " -> " + e['msg']);
 	res.end();
 
 }).listen(PORT, HOST);
