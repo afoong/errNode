@@ -9,11 +9,36 @@ http = require('http'),
 Db = require('mongodb').Db,
 Server = require('mongodb').Server,
 Connection = require('mongodb').Connection,
-BSON = require('mongodb').BSONNative;
+BSON = require('mongodb').BSONNative,
+db = new Db('errrecorderdb', new Server(HOST, DBPORT, {}), {});
 
 sys.puts("now connecting to " + HOST + " at " + DBPORT);
 
 var count = 0;
+
+function getType(res, callback) {  
+   var e;  
+
+	res.writeHead(200, {
+		'Content-Type': 'text/plain'
+	});
+  
+  
+  function doSomething() {  
+    console.log(type);
+    res.write("the type is "+e['type']+"\n");
+    callback(res);
+  }  
+  
+db.collection('errors', function(err, collection) {   
+   collection.find({}, {}, {limit:5, sort[['time', -1]]}, function(err, cursor) {  
+     cursor.toArray(function(err, error) {  
+       e = error;  
+       doSomething();  
+      });  
+    });  
+   }); 
+}
 
 var numInto = function (num) {
 	count = num;
@@ -25,18 +50,21 @@ http.createServer(function(req, res) {
 	});
 	res.write('Hello World\n');
 
-var db = new Db('errrecorderdb', new Server(HOST, DBPORT, {}), {});
 
-db.open(function(err, db) {
-   db.collection('errors', function(err, collection) {
-      collection.count(function(err, c) {
-	 numInto(c); 
-	 
-	 sys.puts("There are " + count + " records in the errors collection");
-	 // but res doesnt exist in this function.. what to do?
-	});
+   getType(res, function(res){
+      res.end();
    });
-});
+
+   //db.open(function(err, db) {
+   //   db.collection('errors', function(err, collection) {
+   //      collection.count(function(err, c) {
+	//        numInto(c); 
+	//    
+	//         sys.puts("There are " + count + " records in the errors collection");
+	//      });
+   //   });
+   //});
+   
 	res.write("There are " + count + " records in the errors collection");
 	res.end();
 
