@@ -49,7 +49,7 @@ http.createServer(function(req, res) {
    db = new Db('errrecorderdb', new Server(HOST, DBPORT, {}), {});
    getType(function(er){
       sys.puts("error 1 is ");
-      console.log(er.type + " -> " + er.msg);
+      console.log(er['type'] + " -> " + er['msg']);
       sys.puts("\n");
    });
 
