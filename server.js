@@ -56,7 +56,9 @@ http.createServer(function(req, res) {
    });
    
 	res.write("There are " + count + " records in the errors collection");
-	res.write(e['type'] + " -> " + e['msg']);
+	if(e) {
+	   res.write(e['type'] + " -> " + e['msg']);
+	}
 	res.end();
 
 }).listen(PORT, HOST);
