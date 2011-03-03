@@ -43,8 +43,8 @@ http.createServer(function(req, res) {
    });
 
    
-   db.open(function(err, db) {
-      db.collection('errors', function(err, collection) {   
+   db.open(function(err, nextDb) {
+      nextDb.collection('errors', function(err, collection) {   
          collection.find({}, {limit:5, sort:[['time', -1]]}, function(err, cursor) {  
            cursor.each(function(err, error) {  
              getType(error);
