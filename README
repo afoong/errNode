@@ -1,8 +1,7 @@
+run startServer to start the server on nohup (keeps it running)
 
+3-18 integrated mongo-node-native driver with express on node v0.4 and jade.
 
-this works on linode too
-test
-this works on linode for mchen
+jade makes the nice HTML views in some sort of pseudoHTML, express makes the site CRUD/MVC and mongo-node-native talks to mongoDB
 
-
-again
+node runs it all.
