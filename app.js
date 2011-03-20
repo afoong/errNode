@@ -139,7 +139,7 @@ var errorsForGroup = function (gID, res) {
             setGroupID(JSON.stringify(gID));
                
             //collection.find({'group-id' : gID}, {limit: 1}, function(err, errorGroup) {
-            collection.find({'group-id' : gID}, {}, function(err, errorGroup) {
+            collection.find({'group-id' : gID}, {sort:[['time', -1]]}, function(err, errorGroup) {
 
                /*
                errorGroup.count(function(err, c) {
