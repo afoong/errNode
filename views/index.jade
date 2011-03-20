@@ -2,7 +2,34 @@
 
 h1= title
 p #{title} is our framework
-p.colorslove I LOVE COLORS
-div#grpId The group id was: #{groupIdStr}
-div The number of Errors in DB were: #{numErrs}
-div The # of Errors in the Group were: #{errsInG}
+p.colorslove I LOVE COLORS and CSSSSSSS (5 additional s's = 5x the fun)
+
+// this produces the same "div" as the below
+#grpId 
+   | The group id was: #{groupIdStr} 
+
+// this is a div without an 'id'
+div The number of Errors in DB were: #{numErrs} 
+
+// this is also without an 'id'
+div 
+   | The # of Errors in the Group were: #{errsInG} 
+
+// makes a table of errors
+//proves that we can access the elements of the errors in a group :D
+div.errors The errors in the group were:
+   - if (eGrp)
+      table.errorGroup
+         tr.cols
+            th.eID ID
+            th.eTime Time
+            th.eType Type
+            th.eMsg Message
+         - eGrp.forEach(function(item){
+            tr.error
+               td.errorId #{item._id}
+               td.errorTime #{item.time}
+               td.errorType #{item.type}
+               td.errorMsg #{item.msg}
+         - })
+   

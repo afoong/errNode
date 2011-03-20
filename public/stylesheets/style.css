@@ -15,8 +15,8 @@ a {
 
 div {
   background-color: #FFFFFF;
-  color: #043463;;
-  margin: 10px
+  color: #043463;
+  margin: 10px;
 }
 
 .colorslove {
@@ -25,4 +25,15 @@ div {
 
 #grpId {
   color: #A2000C;
+}
+
+table .errorGroup, .error td, .cols th
+{
+   border:1px solid green;
+}
+
+.cols th
+{
+   background-color:green;
+   color:white;
 }

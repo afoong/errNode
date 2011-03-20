@@ -3,8 +3,8 @@
  */
 PORT = 8024;
 DBPORT = 27017;
-HOST = 'localhost';
-//HOST = 'li21-127.members.linode.com';
+//HOST = 'localhost';
+HOST = 'li21-127.members.linode.com';
 NUMQUERIES = 3;
 
 /**
@@ -79,7 +79,8 @@ var resolve = function(res) {
     title: 'Express',
     groupIdStr: groupID,
     numErrs: numErrors,
-    errsInG: errorsInGroup
+    errsInG: errorsInGroup,
+    eGrp: oneErrorGroup
    });
    
    resetCounts();
@@ -95,9 +96,10 @@ var setErrCountCount = function (num) {
 	finishedErrCount();
 }
 
-var setErrorGroupCount = function (count, res) {
-   console.log("got an Errors in group count - " + count);
-   errorsInGroup = count;
+var setErrorGroupArray = function (errorGroup, res) {
+   console.log("got an Array in group array - " + errorGroup[0]);
+   errorsInGroup = errorGroup.length;
+   oneErrorGroup = errorGroup;
    finishedGroupCount(res);
 }
 
@@ -109,6 +111,7 @@ var setGroupID = function (idStr) {
 
 var globDB;
 
+var oneErrorGroup;
 var errorsInGroup = 0;
 var numErrors = 0;
 var groupID = "";
@@ -118,12 +121,18 @@ var errorsForGroup = function (gID, res) {
             console.log('ObjectID('+ gID + ')');
             setGroupID(JSON.stringify(gID));
                
-            collection.find({'group-id' : gID}, {limit: 1}, function(err, errorGroup) {
+            //collection.find({'group-id' : gID}, {limit: 1}, function(err, errorGroup) {
+            collection.find({'group-id' : gID}, {}, function(err, errorGroup) {
 
-               
+               /*
                errorGroup.count(function(err, c) {
 	               setErrorGroupCount(c, res);
-	            });
+               });
+               */
+
+               errorGroup.toArray(function(err, c) {
+	               setErrorGroupArray(c, res);
+               });
                /*
                cursor.each(function(err, eInG) {  
                   if(eInG) {
