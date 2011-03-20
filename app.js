@@ -3,8 +3,7 @@
  */
 PORT = 8024;
 DBPORT = 27017;
-//HOST = 'localhost';
-HOST = 'li21-127.members.linode.com';
+HOST = 'localhost';
 NUMQUERIES = 3;
 
 /**
@@ -34,11 +33,13 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+  // HOST default to localhost
 });
 
 app.configure('production', function(){
   app.use(express.errorHandler()); 
+  HOST = 'li21-127.members.linode.com';
 });
 
 // More Vars n Stuff
@@ -233,5 +234,5 @@ app.get('/', function(req, res){
 
 if (!module.parent) {
   app.listen(PORT);
-  console.log("Express server listening on port %d", app.address().port);
+  console.log("Express server listening on port %d AND %s", app.address().port, HOST);
 }
