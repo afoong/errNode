@@ -56,7 +56,12 @@ var resetCounts = function() {
    errCountCount = groupCount = groupIDCount = 0;
 }
 
-var finishedGroupCount =  function(res) {
+
+var finishedErrCount =  function(res) {
+   groupCount++;
+}
+
+var finishedErrorGroup =  function(res) {
    groupCount++;
    
    resolve(res);
@@ -64,7 +69,7 @@ var finishedGroupCount =  function(res) {
 var finishedGroupID =  function() {
    groupIDCount++;
 }
-var finishedErrCount =  function() {
+var finishedGroupCount =  function() {
    errCountCount++;
 }
 
@@ -80,7 +85,8 @@ var resolve = function(res) {
     groupIdStr: groupID,
     numErrs: numErrors,
     errsInG: errorsInGroup,
-    eGrp: oneErrorGroup
+    eGrp: oneErrorGroup,
+    totalGroupCount: groupCount
    });
    
    resetCounts();
@@ -100,6 +106,12 @@ var setErrorGroupArray = function (errorGroup, res) {
    console.log("got an Array in group array - " + errorGroup[0]);
    errorsInGroup = errorGroup.length;
    oneErrorGroup = errorGroup;
+   finishedErrorGroup(res);
+}
+
+var setTotalGroupCount = function (num, res) {
+   console.log("got a total groups count - " + num);
+   groupCount = num;
    finishedGroupCount(res);
 }
 
@@ -111,6 +123,7 @@ var setGroupID = function (idStr) {
 
 var globDB;
 
+var groupCount = 0;
 var oneErrorGroup;
 var errorsInGroup = 0;
 var numErrors = 0;
@@ -157,6 +170,11 @@ var getInfo = function (db, res) {
 	      });
       });
       
+      globDB.collection('groups', function(err, collection) {
+         collection.count(function(err, c) {
+	         setTotalGroupCount(c);
+	      });
+      });
 /*
       globDB.collection('errors', function(err, collection) {   
          collection.find({}, {limit:2, sort:[['time', -1]]}, function(err, cursor) {  

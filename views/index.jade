@@ -4,12 +4,15 @@ h1= title
 p #{title} is our framework
 p.colorslove I LOVE COLORS and CSSSSSSS (5 additional s's = 5x the fun)
 
-// this produces the same "div" as the below
-#grpId 
-   | The group id was: #{groupIdStr} 
-
 // this is a div without an 'id'
 div The number of Errors in DB were: #{numErrs} 
+
+// this is a div without an 'id'
+div The number of Groups in DB were: #{totalGroupCount} 
+
+// this produces the same "div"s as the above
+#grpId 
+   | One group id was: #{groupIdStr} 
 
 // this is also without an 'id'
 div 
