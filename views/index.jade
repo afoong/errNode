@@ -17,6 +17,7 @@ div The number of Groups in DB were: #{totalGroupCount}
 // this is also without an 'id'
 div 
    | The # of Errors in the Group (sorted by time) were: #{errsInG}
+ 
 
 // makes a table of errors
 //proves that we can access the elements of the errors in a group :D
@@ -30,7 +31,9 @@ div.errors The errors in the group were:
             th.eMsg Message
          - eGrp.forEach(function(item){
             tr.error
-               td.errorId #{item._id}
+               td.errorId 
+                  img(src='dinosaur.png')
+                  | #{item._id}
                td.errorTime #{item.time}
                td.errorType #{item.type}
                td.errorMsg #{item.msg}
