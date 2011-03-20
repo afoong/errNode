@@ -90,6 +90,7 @@ var resolve = function(res) {
     numErrs: numErrors,
     errsInG: errorsInGroup,
     eGrp: oneErrorGroup,
+    eGrp2: anotherErrorGroup,
     totalGroupCount: groupCount
    });
    
@@ -109,7 +110,33 @@ var setErrCountCount = function (num) {
 var setErrorGroupArray = function (errorGroup, res) {
    console.log("got an Array in group array - " + errorGroup[0]);
    errorsInGroup = errorGroup.length;
-   oneErrorGroup = errorGroup;
+
+   var d = new Date();
+   d.setDate(31); // last day of month
+   d.setMonth(11); // 12th month (december)
+   d.setFullYear(2010);
+
+   var idx = 0;
+
+   var errGroup1 = new Array();
+   var errGroup2 = new Array();
+
+
+   for (idx = 0; idx < errorGroup.length; idx++) {
+      //console.log(errorGroup[idx].time * 1000);
+      //console.log(d.getTime());
+      
+      if((errorGroup[idx].time * 1000) < d.getTime()) {
+         errGroup1.push(errorGroup[idx]);
+      }
+      else {
+         errGroup2.push(errorGroup[idx]);
+      }
+   }
+
+   oneErrorGroup = errGroup1;
+   anotherErrorGroup = errGroup2;
+   
    finishedErrorGroup(res);
 }
 
@@ -128,7 +155,8 @@ var setGroupID = function (idStr) {
 var globDB;
 
 var groupCount = 0;
-var oneErrorGroup;
+var oneErrorGroup = {};
+var anotherErrorGroup = {};
 var errorsInGroup = 0;
 var numErrors = 0;
 var groupID = "";
