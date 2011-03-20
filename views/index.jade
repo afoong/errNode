@@ -42,7 +42,10 @@ div.errors The errors in the group were:
                   | #{idx}.  
                   img#dino(src='dinosaur.png')
                   | #{item._id}
-               td.errorTime #{rDate.toLocaleString()}
+               td.errorTime
+                  div m: #{rDate.getMonth()+1} d: #{rDate.getDate()} y: #{rDate.getFullYear()}
+                  div locale time: #{rDate.toLocaleTimeString()}
+                  div universal time: #{rDate.getUTCHours()}:#{rDate.getUTCMinutes()}:#{rDate.getUTCSeconds()}
                td.errorType #{item.type}
                td.errorMsg #{item.msg}
          - })
