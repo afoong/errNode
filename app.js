@@ -3,8 +3,8 @@
  */
 PORT = 8024;
 DBPORT = 27017;
-//HOST = 'localhost';
-HOST = 'li21-127.members.linode.com';
+HOST = 'localhost';
+//HOST = 'li21-127.members.linode.com';
 NUMQUERIES = 3;
 
 /**
@@ -56,14 +56,33 @@ var resetCounts = function() {
    errCountCount = groupCount = groupIDCount = 0;
 }
 
-var finishedGroupCount =  function() {
+var finishedGroupCount =  function(res) {
    groupCount++;
+   
+   resolve(res);
 }
 var finishedGroupID =  function() {
    groupIDCount++;
 }
 var finishedErrCount =  function() {
    errCountCount++;
+}
+
+// TODO: try to next the call backs so that one function you query the db,
+//       when it returns with the query, you call another function that
+//       starts the next query, its call back in turn starts the next, and so on.
+//       the past one can call a function like "resolve"
+var resolve = function(res) {
+
+         
+   res.render('index', {
+    title: 'Express',
+    groupIdStr: groupID,
+    numErrs: numErrors,
+    errsInG: errorsInGroup
+   });
+   
+   resetCounts();
 }
 
 var getType = function (error) {    
@@ -76,10 +95,10 @@ var setErrCountCount = function (num) {
 	finishedErrCount();
 }
 
-var setErrorGroupCount = function (count) {
+var setErrorGroupCount = function (count, res) {
    console.log("got an Errors in group count - " + count);
    errorsInGroup = count;
-   finishedGroupCount();
+   finishedGroupCount(res);
 }
 
 var setGroupID = function (idStr) {
@@ -103,7 +122,7 @@ var errorsForGroup = function (gID, res) {
 
                
                errorGroup.count(function(err, c) {
-	               setErrorGroupCount(c);
+	               setErrorGroupCount(c, res);
 	            });
                /*
                cursor.each(function(err, eInG) {  
@@ -181,16 +200,6 @@ app.get('/', function(req, res){
    db = new Db('errrecorderdb', new Server(HOST, DBPORT, {}), {});
 
    getInfo(db, res);
-
-         
-   res.render('index', {
-    title: 'Express',
-    groupIdStr: groupID,
-    numErrs: numErrors,
-    errsInG: errorsInGroup
-   });
-  
-   resetCounts();
 });
 
 // Only listen on $ node app.js
