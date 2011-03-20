@@ -1,8 +1,28 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  color: white;
+  background-color: #6899D3;
+}
+
+h1 {
+  background-color: #274E7D;
 }
 
 a {
   color: #00B7FF;
+}
+
+div {
+  background-color: #FFFFFF;
+  color: #043463;;
+  margin: 10px
+}
+
+.colorslove {
+  color: #F80012;
+}
+
+#grpId {
+  color: #A2000C;
 }
