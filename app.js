@@ -5,6 +5,7 @@ PORT = 8024;
 DBPORT = 27017;
 HOST = 'localhost';
 NUMQUERIES = 3;
+PROD_URL = 'li21-127.members.linode.com';
 
 /**
  * Module dependencies.
@@ -39,7 +40,7 @@ app.configure('development', function(){
 
 app.configure('production', function(){
   app.use(express.errorHandler()); 
-  HOST = 'li21-127.members.linode.com';
+  HOST = PROD_URL;
 });
 
 // More Vars n Stuff
