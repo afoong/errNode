@@ -83,7 +83,9 @@ var resolve = function(res) {
 
          
    res.render('index', {
-    title: 'Express',
+    title: 'Error Group ' + groupID,
+    expr: 'Express',
+    jade: 'Jade',
     groupIdStr: groupID,
     numErrs: numErrors,
     errsInG: errorsInGroup,
