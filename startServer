@@ -1,4 +1,4 @@
 #!/bin/bash
 
-nohup node app.js > log.out 2> log.err < /dev/null & 
+NODE_ENV=production nohup node app.js > log.out 2> log.err < /dev/null & 
 
