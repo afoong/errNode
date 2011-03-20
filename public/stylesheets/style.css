@@ -36,6 +36,11 @@ table .errorGroup, .error td, .cols th
    border:1px solid green;
 }
 
+#showAll {
+   color: #FF0000;
+   font-size: 18px;
+}
+
 .cols th
 {
    background-color:green;
