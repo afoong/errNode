@@ -1,5 +1,11 @@
 run startServer to start the server on nohup (keeps it running)
 
+startServer also sets the NODE_ENV to 'production'
+this variable sets the HOST to 'li21-127.members.linode.com'
+
+running the app without the script or with the NODE_ENV as 'development'
+will default the HOST to 'localhost'
+
 3-18 integrated mongo-node-native driver with express on node v0.4 and jade.
 
 jade makes the nice HTML views in some sort of pseudoHTML, express makes the site CRUD/MVC and mongo-node-native talks to mongoDB
