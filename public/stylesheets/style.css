@@ -7,6 +7,10 @@ body {
 
 h1 {
   background-color: #274E7D;
+  background-image:url('../dinosaur.png');
+  background-repeat:repeat-x;
+  background-position:bottom;
+  height: 80px;
 }
 
 a {
