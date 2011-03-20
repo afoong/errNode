@@ -35,13 +35,14 @@ div.errors The errors in the group were:
             th.eType Type
             th.eMsg Message
          - eGrp.forEach(function(item){
-         - idx++;   
+            - var rDate = new Date(item.time *1000);
+            - idx++;   
             tr.error
                td.errorId 
                   | #{idx}.  
                   img#dino(src='dinosaur.png')
                   | #{item._id}
-               td.errorTime #{item.time}
+               td.errorTime #{rDate.toLocaleString()}
                td.errorType #{item.type}
                td.errorMsg #{item.msg}
          - })

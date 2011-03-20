@@ -81,7 +81,6 @@ var finishedGroupCount =  function() {
 //       starts the next query, its call back in turn starts the next, and so on.
 //       the past one can call a function like "resolve"
 var resolve = function(res) {
-
          
    res.render('index', {
     title: 'Error Group ' + groupID,
