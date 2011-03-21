@@ -34,7 +34,8 @@ div.errors The errors in the group were (click year to toggle month data):
       ul
          - eGrp.forEach(function(year){
             - if(year)
-               li.year #{year.year}
+               li 
+                  .year #{year.year}
                   ul
                      - year.forEach(function(month) {
                         li.month #{getMonthString(month.month)}

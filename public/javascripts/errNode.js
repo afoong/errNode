@@ -11,11 +11,19 @@ $(document).ready(function(){
    });
 
    // hides the month data on year click
+   $(".year").click(function() {
+      $(this).siblings().fadeToggle();
+   });
+   
+
+/*
+   // hides the month data on year click
    $(".year").children().each(function() {
       $(this).parent().click(function() {
          $(this).children().fadeToggle();
       });
    });
+*/
    
 });
 
