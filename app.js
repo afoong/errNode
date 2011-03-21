@@ -132,20 +132,15 @@ var setErrorGroupArray = function (errorGroup, res) {
 
    var allTime = new Array();
 
-   var d = new Date();
-   d.setDate(31); // last day of month
-   d.setMonth(11); // 12th month (december)
-   d.setFullYear(2010);
-
    var idx = 0;
 
-   var errGroup1 = new Array();
-   var errGroup2 = new Array();
-
-
+   // creates a super array!
+   //    allTime
+   //       year#.year = e.x. 2010
+   //       year#.month#.month = ex.x 5 (june; months are 0-11)
+   //       year#.month# = array of Errors - each Error is an error with time == m#/y#
+   //       
    for (idx = 0; idx < errorGroup.length; idx++) {
-      //console.log(errorGroup[idx].time * 1000);
-      //console.log(d.getTime());
       var egDate = new Date(errorGroup[idx].time * 1000);
       var y = egDate.getYear().toString();
       var mo = egDate.getMonth().toString();
@@ -163,58 +158,6 @@ var setErrorGroupArray = function (errorGroup, res) {
       
       allTime[y.toString()][mo.toString()].push(errorGroup[idx]);
    }
-   
-/*
-   
-   - if (eGrp)
-      - var idx = 0;
-      table.errorGroup
-         tr.cols
-            th.eID ID
-            th.eTime Time
-            th.eType Type
-            th.eMsg Message
-         - eGrp.forEach(function(item){
-            - var rDate = new Date(item.time *1000);
-            - idx++;   
-            tr.error
-               td.errorId 
-                  | #{idx}.  
-                  img#dino(src='dinosaur.png')
-                  | #{item._id}
-               td.errorTime
-                  div m: #{rDate.getMonth()+1} d: #{rDate.getDate()} y: #{rDate.getFullYear()}
-                  div locale time: #{rDate.toLocaleTimeString()}
-                  div universal time: #{rDate.getUTCHours()}:#{rDate.getUTCMinutes()}:#{rDate.getUTCSeconds()}
-               td.errorType #{item.type}
-               td.errorMsg #{item.msg}
-         - })
-
-div.errors The errors in the second group were (AFTER 12/31/2010):
-   - if (eGrp2)
-      - var idx = 0;
-      table.errorGroup
-         tr.cols
-            th.eID ID
-            th.eTime Time
-            th.eType Type
-            th.eMsg Message
-         - eGrp2.forEach(function(item){
-            - var rDate = new Date(item.time *1000);
-            - idx++;   
-            tr.error
-               td.errorId 
-                  | #{idx}.  
-                  img#dino(src='dinosaur.png')
-                  | #{item._id}
-               td.errorTime
-                  div m: #{rDate.getMonth()+1} d: #{rDate.getDate()} y: #{rDate.getFullYear()}
-                  div locale time: #{rDate.toLocaleTimeString()}
-                  div universal time: #{rDate.getUTCHours()}:#{rDate.getUTCMinutes()}:#{rDate.getUTCSeconds()}
-               td.errorType #{item.type}
-               td.errorMsg #{item.msg}
-         - })
-   */
 
    wholeErrorGroup = allTime;
    
