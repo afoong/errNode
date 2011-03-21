@@ -21,12 +21,14 @@ div The number of Groups in DB were: #{totalGroupCount}
 
 ul.bubbleList
    li
-      #grpId.bubble 
+      #grpId.bubble // div with id=grpId class=bubble
          | One group id was: #{groupIdStr}    
    li
       div#x.bubble Try clicking the dinosaurs below
    li
-      div#showAll.bubble **Click here to restore dinosaurs**
+      div#showAll.bubble 
+         em
+            strong Click here to restore dinosaurs
    li
       // this is also without an 'id'
       div.bubble 

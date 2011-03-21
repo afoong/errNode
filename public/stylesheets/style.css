@@ -73,6 +73,7 @@ table {
 #showAll {
    color: #FF0000;
    font-size: 18px;
+   text-decoration: blink;
 }
 
 .cols th
