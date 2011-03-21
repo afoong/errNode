@@ -7,11 +7,12 @@ body {
 
 h1 {
   background-color: #274E7D;
-  background-image:url('../dinosaur.png');
-  background-repeat:repeat-x;
-  background-position:bottom;
-  height: 80px;
+  background-image:url('../images/graa.png');
+  background-repeat: no-repeat;
+  background-position:bottom right;
+  height: 300px;
   padding: 10px;
+  font-size:45px;
   -moz-border-radius: 20px;
   -webkit-border-radius: 20px;
   border-radius: 20px 20px 20px 20px; /* for some reason you have to declare all corners in ie*/
