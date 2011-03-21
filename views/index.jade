@@ -43,7 +43,7 @@ div.errors The errors in the group were (click year to toggle month data):
       ul This error group spans #{eGrp.numYears} years
          - eGrp.forEach(function(year){
             - if(year)
-               li 
+               li.y 
                   .year In #{year.year} there were #{year.numMonths} months with errors
                   ul
                      - year.forEach(function(month) {
