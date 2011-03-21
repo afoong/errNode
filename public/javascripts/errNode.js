@@ -12,7 +12,9 @@ $(document).ready(function(){
 
    // hides the month data on year click
    $(".year").each(function() {
+      $(this).click(function() {
          $(this).siblings().fadeToggle();
+      });
    });
    
 
