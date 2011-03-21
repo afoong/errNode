@@ -51,6 +51,25 @@ var e;
 
 var errCountCount = 0, groupCount = 0, groupIDCount = 0;
 
+
+var months = new Array(12);
+months[0] = "January";
+months[1] = "February";
+months[2] = "March";
+months[3] = "April";
+months[4] = "May";
+months[5] = "June";
+months[6] = "July";
+months[7] = "August";
+months[8] = "September";
+months[9] = "October";
+months[10] = "November";
+months[11] = "December";
+
+var getMonthName = function(m) {
+   return months[m];
+}
+
 var sumCounts = function() {
    return errCountCount + groupCount + groupIDCount;
 }
@@ -89,9 +108,9 @@ var resolve = function(res) {
     groupIdStr: groupID,
     numErrs: numErrors,
     errsInG: errorsInGroup,
-    eGrp: oneErrorGroup,
-    eGrp2: anotherErrorGroup,
-    totalGroupCount: groupCount
+    eGrp: wholeErrorGroup,
+    totalGroupCount: groupCount,
+    getMonthString: getMonthName // zomg you can export functions too!?!?
    });
    
    resetCounts();
@@ -111,6 +130,8 @@ var setErrorGroupArray = function (errorGroup, res) {
    console.log("got an Array in group array - " + errorGroup[0]);
    errorsInGroup = errorGroup.length;
 
+   var allTime = new Array();
+
    var d = new Date();
    d.setDate(31); // last day of month
    d.setMonth(11); // 12th month (december)
@@ -125,17 +146,77 @@ var setErrorGroupArray = function (errorGroup, res) {
    for (idx = 0; idx < errorGroup.length; idx++) {
       //console.log(errorGroup[idx].time * 1000);
       //console.log(d.getTime());
-      
-      if((errorGroup[idx].time * 1000) < d.getTime()) {
-         errGroup1.push(errorGroup[idx]);
-      }
-      else {
-         errGroup2.push(errorGroup[idx]);
-      }
-   }
+      var egDate = new Date(errorGroup[idx].time * 1000);
+      var y = egDate.getYear().toString();
+      var mo = egDate.getMonth().toString();
 
-   oneErrorGroup = errGroup1;
-   anotherErrorGroup = errGroup2;
+      if(allTime[y] == undefined) {
+         allTime[y] = new Array();
+         allTime[y]['year'] = egDate.getFullYear();
+      }
+
+      if(allTime[y][mo] == undefined) {
+         allTime[y][mo] = new Array();
+         allTime[y][mo]['month'] = egDate.getMonth();
+      }
+
+      
+      allTime[y.toString()][mo.toString()].push(errorGroup[idx]);
+   }
+   
+/*
+   
+   - if (eGrp)
+      - var idx = 0;
+      table.errorGroup
+         tr.cols
+            th.eID ID
+            th.eTime Time
+            th.eType Type
+            th.eMsg Message
+         - eGrp.forEach(function(item){
+            - var rDate = new Date(item.time *1000);
+            - idx++;   
+            tr.error
+               td.errorId 
+                  | #{idx}.  
+                  img#dino(src='dinosaur.png')
+                  | #{item._id}
+               td.errorTime
+                  div m: #{rDate.getMonth()+1} d: #{rDate.getDate()} y: #{rDate.getFullYear()}
+                  div locale time: #{rDate.toLocaleTimeString()}
+                  div universal time: #{rDate.getUTCHours()}:#{rDate.getUTCMinutes()}:#{rDate.getUTCSeconds()}
+               td.errorType #{item.type}
+               td.errorMsg #{item.msg}
+         - })
+
+div.errors The errors in the second group were (AFTER 12/31/2010):
+   - if (eGrp2)
+      - var idx = 0;
+      table.errorGroup
+         tr.cols
+            th.eID ID
+            th.eTime Time
+            th.eType Type
+            th.eMsg Message
+         - eGrp2.forEach(function(item){
+            - var rDate = new Date(item.time *1000);
+            - idx++;   
+            tr.error
+               td.errorId 
+                  | #{idx}.  
+                  img#dino(src='dinosaur.png')
+                  | #{item._id}
+               td.errorTime
+                  div m: #{rDate.getMonth()+1} d: #{rDate.getDate()} y: #{rDate.getFullYear()}
+                  div locale time: #{rDate.toLocaleTimeString()}
+                  div universal time: #{rDate.getUTCHours()}:#{rDate.getUTCMinutes()}:#{rDate.getUTCSeconds()}
+               td.errorType #{item.type}
+               td.errorMsg #{item.msg}
+         - })
+   */
+
+   wholeErrorGroup = allTime;
    
    finishedErrorGroup(res);
 }
@@ -155,8 +236,7 @@ var setGroupID = function (idStr) {
 var globDB;
 
 var groupCount = 0;
-var oneErrorGroup = {};
-var anotherErrorGroup = {};
+var wholeErrorGroup = {};
 var errorsInGroup = 0;
 var numErrors = 0;
 var groupID = "";
