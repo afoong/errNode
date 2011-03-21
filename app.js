@@ -140,6 +140,8 @@ var setErrorGroupArray = function (errorGroup, res) {
    //       year#.month#.month = ex.x 5 (june; months are 0-11)
    //       year#.month# = array of Errors - each Error is an error with time == m#/y#
    //       
+   var numYears = 0;
+   
    for (idx = 0; idx < errorGroup.length; idx++) {
       var egDate = new Date(errorGroup[idx].time * 1000);
       var y = egDate.getYear().toString();
@@ -148,16 +150,21 @@ var setErrorGroupArray = function (errorGroup, res) {
       if(allTime[y] == undefined) {
          allTime[y] = new Array();
          allTime[y]['year'] = egDate.getFullYear();
+         allTime[y]['numMonths'] = 0;
+         numYears++;
       }
 
       if(allTime[y][mo] == undefined) {
          allTime[y][mo] = new Array();
          allTime[y][mo]['month'] = egDate.getMonth();
+         allTime[y]['numMonths']++;
       }
 
       
       allTime[y.toString()][mo.toString()].push(errorGroup[idx]);
    }
+
+   allTime['numYears'] = numYears;
 
    wholeErrorGroup = allTime;
    

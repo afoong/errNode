@@ -14,8 +14,7 @@ h1 {
   padding: 10px;
   font-size: 45px;
   -moz-border-radius: 20px;
-  -webkit-border-radius: 20px;
-  border-radius: 20px 20px 20px 20px; /* for some reason you have to declare all corners in ie*/
+  border-radius: 20px; /* for some reason you have to declare all corners in ie*/
 
 }
 
@@ -33,10 +32,11 @@ div {
   background-color: #FFFFFF;
   color: #043463;
   margin: 10px;
+  word-wrap:break-word;
   padding: 10px;
   -moz-border-radius: 20px;
-  -webkit-border-radius: 20px;
-  border-radius: 20px 20px 20px 20px; /* for some reason you have to declare all corners in ie*/
+  border-radius: 20px;
+  
 }
 
 .colorslove {
@@ -50,6 +50,11 @@ div {
 table .errorGroup, .error td, .cols th
 {
    border:1px solid green;
+}
+
+table {
+   table-layout:fixed;
+   width: 95%;
 }
 
 #showAll {

@@ -34,14 +34,15 @@ div
 //proves that we can access the elements of the errors in a group :D
 div.errors The errors in the group were (click year to toggle month data):
    - if(eGrp)
-      ul
+      ul This error group spans #{eGrp.numYears} years
          - eGrp.forEach(function(year){
             - if(year)
                li 
-                  .year #{year.year}
+                  .year In #{year.year} there were #{year.numMonths} months with errors
                   ul
                      - year.forEach(function(month) {
-                        li.month #{getMonthString(month.month)}
+                        li.month 
+                           | there were #{month.length} errors in #{getMonthString(month.month)}
                            -var errNumInMonth = 0;
                            table.errorGroup
                               tr.cols
