@@ -11,6 +11,9 @@ h1 {
   background-repeat:repeat-x;
   background-position:bottom;
   height: 80px;
+  padding: 10px;
+   -moz-border-radius: 20px;
+   border-radius: 20px;
 }
 
 a {
@@ -21,6 +24,9 @@ div {
   background-color: #FFFFFF;
   color: #043463;
   margin: 10px;
+  padding: 10px;
+   -moz-border-radius: 20px;
+   border-radius: 20px;
 }
 
 .colorslove {
