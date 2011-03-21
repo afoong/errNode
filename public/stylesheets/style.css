@@ -10,13 +10,19 @@ h1 {
   background-image:url('../images/graa.png');
   background-repeat: no-repeat;
   background-position:bottom right;
-  height: 300px;
+  height: 310px;
   padding: 10px;
-  font-size:45px;
+  font-size: 45px;
   -moz-border-radius: 20px;
   -webkit-border-radius: 20px;
   border-radius: 20px 20px 20px 20px; /* for some reason you have to declare all corners in ie*/
 
+}
+
+h1 p {
+   color: #5CCCCC;
+   margin: 10px;
+   font-size: 80px;
 }
 
 a {
