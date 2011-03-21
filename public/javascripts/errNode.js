@@ -1,13 +1,15 @@
 $(document).ready(function(){
 
    // hides images when you click them
-   $("img").click(function(){
-      $(this).parent().parent().fadeToggle();
+   $(".dino").each(function() {
+      $(this).click(function(){
+         $(this).parent().parent().fadeToggle();
+      });
    });
 
    // shows all hiden items
    $("#showAll").click(function() {
-      $(":hidden", document.body).show('slow');
+      $(":hidden", document.body.table).show('slow');
    });
 
    // hides the month data on year click

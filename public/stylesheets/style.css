@@ -36,7 +36,7 @@ div {
   padding: 10px;
   -moz-border-radius: 20px;
   border-radius: 20px;
-  
+  display: block;
 }
 
 .colorslove {
@@ -44,7 +44,20 @@ div {
 }
 
 #grpId {
-  color: #A2000C;
+   color: #A2000C;
+}
+
+ul.bubbleList {
+   list-style-type:none;
+   padding: 0;
+}
+
+.bubbleList li {
+   margin: 30px 0 30px 0;
+}
+
+.bubble {
+   display: inline;
 }
 
 table .errorGroup, .error td, .cols th

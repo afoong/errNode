@@ -18,16 +18,19 @@ div The number of Errors in DB were: #{numErrs}
 div The number of Groups in DB were: #{totalGroupCount} 
 
 // this produces the same "div"s as the above
-#grpId 
-   | One group id was: #{groupIdStr} 
 
-div#x Try clicking the dinosaurs below
-
-div#showAll **Click here to restore dinosaurs**
-
-// this is also without an 'id'
-div 
-   | The # of Errors in the Group (sorted by time) were: #{errsInG}
+ul.bubbleList
+   li
+      #grpId.bubble 
+         | One group id was: #{groupIdStr}    
+   li
+      div#x.bubble Try clicking the dinosaurs below
+   li
+      div#showAll.bubble **Click here to restore dinosaurs**
+   li
+      // this is also without an 'id'
+      div.bubble 
+         | The # of Errors in the Group (sorted by time) were: #{errsInG}
  
 
 // makes a table of errors
@@ -55,7 +58,7 @@ div.errors The errors in the group were (click year to toggle month data):
                                  - var rDate = new Date(anError.time *1000);
                                  tr.error
                                     td.errorNum 
-                                       img#dino(src='dinosaur.png') 
+                                       img.dino(src='dinosaur.png') 
                                        | #{errNumInMonth}
                                     td.errorId
                                        | #{anError._id}
