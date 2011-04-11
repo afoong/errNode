@@ -39,6 +39,16 @@ div {
   display: block;
 }
 
+#placeholder div{
+   margin: 0px;
+   padding: 0px;
+}
+
+#placeholder {
+   margin: 20px;
+   padding: 20px;
+}
+
 .colorslove {
   color: #F80012;
 }
@@ -60,12 +70,12 @@ ul.bubbleList {
    display: inline;
 }
 
-table .errorGroup, .error td, .cols th
+.month table .errorGroup, .error td, .cols th
 {
    border:1px solid green;
 }
 
-table {
+.month table {
    table-layout:fixed;
    width: 95%;
 }

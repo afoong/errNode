@@ -80,13 +80,13 @@ var resetCounts = function() {
 
 
 var finishedErrCount =  function(res) {
-   groupCount++;
+   //groupCount++;
 }
 
 var finishedErrorGroup =  function(res) {
    groupCount++;
-   
-   resolve(res);
+   if(groupCount >= globGroupCount || groupCount >= limitedGroupCount)
+      resolve(res);
 }
 var finishedGroupID =  function() {
    groupIDCount++;
@@ -100,16 +100,16 @@ var finishedGroupCount =  function() {
 //       starts the next query, its call back in turn starts the next, and so on.
 //       the past one can call a function like "resolve"
 var resolve = function(res) {
-         
    res.render('index', {
     title: 'Error Group ' + groupID,
     expr: 'Express',
     jade: 'Jade',
+    datasets: groupErrors,
     groupIdStr: groupID,
     numErrs: numErrors,
     errsInG: errorsInGroup,
     eGrp: wholeErrorGroup,
-    totalGroupCount: groupCount,
+    totalGroupCount: globGroupCount,
     getMonthString: getMonthName // zomg you can export functions too!?!?
    });
    
@@ -124,6 +124,51 @@ var setErrCountCount = function (num) {
    console.log("got a total errors count - " + num);
 	numErrors = num;
 	finishedErrCount();
+}
+
+var setGroup = function (errorGroup, gID, res) {
+   errorsInGroup = errorGroup.length;
+
+   var oneGroup = new Array();
+
+   // label: groupName
+   // data: (year, # errors)
+
+   var idx = 0;
+
+   // creates a super array!
+   //    allTime
+   //       year#.year = e.x. 2010
+   //       year#.month#.month = ex.x 5 (june; months are 0-11)
+   //       year#.month# = array of Errors - each Error is an error with time == m#/y#
+   //       
+   var numYears = 0;
+   
+   for (idx = 0; idx < errorGroup.length; idx++) {
+      var egDate = new Date(errorGroup[idx].time * 1000);
+      var y = egDate.getFullYear().toString();
+
+      if(groupErrors[gID].data == undefined) {
+         groupErrors[gID].data = new Array();
+      }
+
+      var neverSet = true;
+      
+      groupErrors[gID].data.forEach(function (yr) {
+         if(yr[0] == egDate.getFullYear()) {
+            yr[1]++;
+            neverSet = false;
+         }
+      });
+
+      if(neverSet) {
+         var yearData = [egDate.getFullYear(), 1];
+         
+         groupErrors[gID].data.push(yearData);
+      }
+   }
+   
+   finishedErrorGroup(res);
 }
 
 var setErrorGroupArray = function (errorGroup, res) {
@@ -167,13 +212,11 @@ var setErrorGroupArray = function (errorGroup, res) {
    allTime['numYears'] = numYears;
 
    wholeErrorGroup = allTime;
-   
-   finishedErrorGroup(res);
 }
 
 var setTotalGroupCount = function (num, res) {
    console.log("got a total groups count - " + num);
-   groupCount = num;
+   globGroupCount = num;
    finishedGroupCount(res);
 }
 
@@ -185,11 +228,25 @@ var setGroupID = function (idStr) {
 
 var globDB;
 
+var globGroupCount = 0;
+var limitedGroupCount = 0;
 var groupCount = 0;
 var wholeErrorGroup = {};
+var groupErrors = {};
 var errorsInGroup = 0;
 var numErrors = 0;
 var groupID = "";
+
+var processEachGroup = function (gID, res) {
+   globDB.collection('errors', function(err, collection) {
+      collection.find({'group-id' : gID}, {sort:[['time', -1]]}, function(err, errorGroup) {
+         //console.log("--" + gID);
+         errorGroup.toArray(function(err, c) {
+            setGroup(c, gID, res);   
+         });
+      });
+   });
+}
 
 var errorsForGroup = function (gID, res) {
       globDB.collection('errors', function(err, collection) { 
@@ -270,19 +327,47 @@ var getInfo = function (db, res) {
              if(group) {
 
                errorsForGroup(group._id, res);
+               
+             }
+            });  
+         });  
+      });   
+
+      groupCount = 0;
+      limitedGroupCount = 10;
+      globDB.collection('groups', function(err, collection) {  
+         collection.find({}, {limit:limitedGroupCount}, function(err, cursor) {  
+            //globGroupCount = cursor.length;
+           cursor.each(function(err, group) {  
+             if(group) {
+               //console.log(group._id);
+               groupErrors[group._id] = {};
+               groupErrors[group._id].label = group._id;
+               processEachGroup(group._id, res);
                //errorsForGroup(JSON.stringify(group._id), res);
 
                
              }
             });  
          });  
-      });    
+      }); 
       
    });
 }
 
+// http request to return json document (text/plain maybe)
+// jquery should be able to query url for json document
+// model : separate 5 line program - client side requests time of day
+// return time in json
 
 // Routes
+
+app.get('/datasets.json', function(req, res) {
+   res.charset = 'UTF-8'; 
+   res.header('Content-Type', 'application/json'); 
+   res.write(JSON.stringify(groupErrors));
+   res.end(); 
+});
 
 app.get('/', function(req, res){
 
@@ -297,3 +382,4 @@ if (!module.parent) {
   app.listen(PORT);
   console.log("Express server listening on port %d AND %s", app.address().port, HOST);
 }
+

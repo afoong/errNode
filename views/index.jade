@@ -5,6 +5,17 @@ h1
       | _**MONGO** has returned with_: 
    #{title}
 
+div
+   div#placeholder(style="width:700px;height:400px;")
+   p Here is an example with real data: military budgets for
+        various countries in constant (2005) million US dollars (source: <a href="http://www.sipri.org/">SIPRI</a>).
+
+   p Since all data is available client-side, it's pretty easy to
+       make the plot interactive. Try turning countries on/off with the
+       checkboxes below.
+
+   p#choices Show:
+
 p #{expr} is our framework, our templating engine is #{jade}
    br // a line break
    | with Node and MongoDB on the backend
