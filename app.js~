@@ -20,7 +20,7 @@ var express = require('express'),
    Connection = mongo.Connection,
    BSON = mongo.BSONPure;
 
-app = module.exports = express.createServer();
+var app = module.exports = express.createServer();
 
 // Configuration
 
