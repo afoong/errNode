@@ -52,13 +52,13 @@ var finishedErrorGroupTime =  function(res, gName) {
    groupTimePackage['names'].push(gName);
    
    groupCount++;
-   if(groupCount >= globGroupCount || groupCount >= limitedGroupCount)
+   if(groupCount >= globGroupCount || (groupCount >= limitedGroupCount && limitedGroupCount > 0))
       resolve(res);
 }
 var finishedErrorGroup =  function(res) {
    groupCount++;
-   if(groupCount >= globGroupCount || groupCount >= limitedGroupCount)
-      resolve(res);
+   //if(groupCount >= globGroupCount || groupCount >= limitedGroupCount)
+   //   resolve(res);
 }
 var finishedGroupID =  function() {
    groupIDCount++;
@@ -106,8 +106,10 @@ var setGroupTime = function (errorGroup, gID, res) {
       groupTimePackage['minTime'] = errorGroup[idx].time * 1000;
    }
 
-   groupTime.length = 0;
+   groupTime = new Array();
    var numYears = 0;
+   var idTxt = (''+gID);
+   var groupID = idTxt.substring(idTxt.length-9, idTxt.length);
    
    for (idx = 0; idx < errorGroup.length; idx++) {
 
@@ -118,7 +120,7 @@ var setGroupTime = function (errorGroup, gID, res) {
       groupTime[idx][1] = idx;
    }
    
-   finishedErrorGroupTime(res, errorGroup[0].type);
+   finishedErrorGroupTime(res, errorGroup[0].type + ' - ' + groupID);
 }
 
 var setGroup = function (errorGroup, gID, res) {
@@ -281,6 +283,11 @@ var errorsForGroup = function (gID, res) {
 exports.getInfo = getInfo;
 
 var getInfo = function (db, res) {
+   // reinit
+   groupTimePackage.data = new Array();
+   groupTimePackage.names = new Array();
+   groupTimePackage.minTime = 0;
+   
    db.open(function(err, thisDb) {
 
       globDB = thisDb;
@@ -295,32 +302,6 @@ var getInfo = function (db, res) {
 	         setTotalGroupCount(c);
 	      });
       });
-/*
-      globDB.collection('errors', function(err, collection) {   
-         collection.find({}, {limit:2, sort:[['time', -1]]}, function(err, cursor) {  
-           cursor.each(function(err, error) {  
-             if(error) {
-               res.write('\n\n\nError found: '+error['type'] + " -> " + error['msg'] + " @ " + error.time);
-               finishedOne();
-             }
-            });  
-         });  
-      });
-      
-      globDB.collection('groups', function(err, collection) {   
-         collection.find({}, {limit:5}, function(err, cursor) {  
-           cursor.each(function(err, group) {  
-             if(group) {
-               //sys.puts(sys.inspect(group));
-               res.write('\n\n\nGroup: ObjectID('+ group._id.toString() + ") -> " + group['msg']);
-               res.write("\n   JSON stringify contents: " + JSON.stringify(group));
-               res.write("\n   stringified group._id " + JSON.stringify(group._id));
-               finishedOne();
-             }
-            });  
-         });  
-      }); 
-*/
 
       globDB.collection('groups', function(err, collection) {   
          collection.find({}, {limit:1}, function(err, cursor) {  
@@ -335,9 +316,14 @@ var getInfo = function (db, res) {
       });   
 
       groupCount = 0;
-      limitedGroupCount = 10;
+      limitedGroupCount = 20;
+      var limitSet = {};
+      if(limitedGroupCount > 0) {
+         limitSet.limit = limitedGroupCount;
+      }
+      
       globDB.collection('groups', function(err, collection) {  
-         collection.find({}, {limit:limitedGroupCount}, function(err, cursor) {  
+         collection.find({}, limitSet, function(err, cursor) {  
             //globGroupCount = cursor.length;
            cursor.each(function(err, group) {  
              if(group) {
