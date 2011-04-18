@@ -6,84 +6,10 @@ h1
    #{title}
 
 div
-   div#placeholder(style="width:500px;height:800px;")
-   p Here is an example with real data: military budgets for
-        various countries in constant (2005) million US dollars (source: <a href="http://www.sipri.org/">SIPRI</a>).
+   div#placeholder(style="width:600px;height:300px;")
 
-   p Since all data is available client-side, it's pretty easy to
-       make the plot interactive. Try turning countries on/off with the
-       checkboxes below.
-
-   p#choices Show:
-
-p #{expr} is our framework, our templating engine is #{jade}
-   br // a line break
-   | with Node and MongoDB on the backend
- 
-p.colorslove I LOVE COLORS and CSSSSSSS (5 additional s's = 5x the fun)
-
-// this is a div without an 'id'
-div The number of Errors in DB were: #{numErrs} 
-
-// this is a div without an 'id'
-div The number of Groups in DB were: #{totalGroupCount} 
-
-// this produces the same "div"s as the above
-
-ul.bubbleList
-   li
-      // div with id=grpId class=bubble
-      #grpId.bubble
-         | One group id was: #{groupIdStr}    
-   li
-      div#x.bubble Try clicking the dinosaurs below
-   li
-      div#showAll.bubble 
-         em
-            strong Click here to restore dinosaurs
-   li
-      // this is also without an 'id'
-      div.bubble 
-         | The # of Errors in the Group (sorted by time) were: #{errsInG}
- 
-
-// makes a table of errors
-//proves that we can access the elements of the errors in a group :D
-div.errors The errors in the group were (click year to toggle month data):
-   - if(eGrp)
-      ul This error group spans #{eGrp.numYears} years
-         - eGrp.forEach(function(year){
-            - if(year)
-               li.y 
-                  .year In #{year.year} there were #{year.numMonths} months with errors
-                  ul
-                     - year.forEach(function(month) {
-                        li.month 
-                           | there were #{month.length} errors in #{getMonthString(month.month)}
-                           -var errNumInMonth = 0;
-                           table.errorGroup
-                              tr.cols
-                                 th.eNum #
-                                 th.eID ID
-                                 th.eTime Time
-                                 th.eType Type
-                                 th.eMsg Message
-                              - month.forEach(function(anError) {
-                                 - var rDate = new Date(anError.time *1000);
-                                 tr.error
-                                    td.errorNum 
-                                       img.dino(src='dinosaur.png') 
-                                       | #{errNumInMonth}
-                                    td.errorId
-                                       | #{anError._id}
-                                    td.errorTime
-                                       div m: #{rDate.getMonth()} d: #{rDate.getDate()} y: #{rDate.getFullYear()}
-                                       div locale time: #{rDate.toLocaleTimeString()}
-                                    td.errorType #{anError.type}
-                                    td.errorMsg #{anError.msg}
-                                 - errNumInMonth++;
-                              - })
-                     - })
-         - })
-  
+   p Zoom to:
+      button#whole Whole period
+      button#months Months
+      button#days Days
 

@@ -37,6 +37,18 @@ var finishedErrCount =  function(res) {
    //groupCount++;
 }
 
+var finishedErrorGroupTime =  function(res) {
+   groupsTimes.push(groupTime);
+   
+   if(groupTimePackage['data'] == undefined)
+      groupTimePackage['data'] = new Array();
+      
+   groupTimePackage['data'].push(groupTime);
+   
+   groupCount++;
+   if(groupCount >= globGroupCount || groupCount >= limitedGroupCount)
+      resolve(res);
+}
 var finishedErrorGroup =  function(res) {
    groupCount++;
    if(groupCount >= globGroupCount || groupCount >= limitedGroupCount)
@@ -80,10 +92,31 @@ var setErrCountCount = function (num) {
 	finishedErrCount();
 }
 
+var setGroupTime = function (errorGroup, gID, res) {
+
+   var idx = 0;
+   if(neverSet) { // first time thru => lowest time (min)
+      neverset = false;
+      groupTimePackage['minTime'] = errorGroup[idx].time * 1000;
+   }
+
+   groupTime.length = 0;
+   var numYears = 0;
+   
+   for (idx = 0; idx < errorGroup.length; idx++) {
+
+      if(groupTime[idx] == undefined) {
+         groupTime[idx] = new Array();
+      }
+      groupTime[idx][0] = errorGroup[idx].time * 1000;
+      groupTime[idx][1] = idx;
+   }
+   
+   finishedErrorGroupTime(res);
+}
+
 var setGroup = function (errorGroup, gID, res) {
    errorsInGroup = errorGroup.length;
-
-   var oneGroup = new Array();
 
    // label: groupName
    // data: (year, # errors)
@@ -122,7 +155,7 @@ var setGroup = function (errorGroup, gID, res) {
       }
    }
    
-   finishedErrorGroup(res);
+   //finishedErrorGroup(res);
 }
 
 var setErrorGroupArray = function (errorGroup, res) {
@@ -190,13 +223,19 @@ var groupErrors = {};
 var errorsInGroup = 0;
 var numErrors = 0;
 var groupID = "";
+var groupTime = new Array();
+var groupsTimes = new Array();
+var groupTimePackage = {};
+
+var neverSet = true;
 
 var processEachGroup = function (gID, res) {
    globDB.collection('errors', function(err, collection) {
-      collection.find({'group-id' : gID}, {sort:[['time', -1]]}, function(err, errorGroup) {
+      collection.find({'group-id' : gID}, {sort:[['time', 1]]}, function(err, errorGroup) {
          //console.log("--" + gID);
          errorGroup.toArray(function(err, c) {
-            setGroup(c, gID, res);   
+            //setGroup(c, gID, res);   
+            setGroupTime(c, gID, res);
          });
       });
    });
@@ -301,7 +340,7 @@ var getInfo = function (db, res) {
                groupErrors[group._id].label = group._id;
                processEachGroup(group._id, res);
                //errorsForGroup(JSON.stringify(group._id), res);
-
+               
                
              }
             });  
@@ -322,6 +361,13 @@ app.get('/datasets.json', function(req, res) {
    res.charset = 'UTF-8'; 
    res.header('Content-Type', 'application/json'); 
    res.write(JSON.stringify(groupErrors));
+   res.end(); 
+});
+
+app.get('/time.json', function(req, res) {
+   res.charset = 'UTF-8'; 
+   res.header('Content-Type', 'application/json'); 
+   res.write(JSON.stringify(groupTimePackage));
    res.end(); 
 });
 
