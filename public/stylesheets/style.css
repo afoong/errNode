@@ -39,7 +39,7 @@ div {
   display: block;
 }
 
-#placeholder div{
+#placeholder div, #overview div{
    margin: 0px;
    padding: 0px;
 }

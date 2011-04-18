@@ -37,13 +37,19 @@ var finishedErrCount =  function(res) {
    //groupCount++;
 }
 
-var finishedErrorGroupTime =  function(res) {
+var finishedErrorGroupTime =  function(res, gName) {
    groupsTimes.push(groupTime);
    
-   if(groupTimePackage['data'] == undefined)
+   if(groupTimePackage['data'] == undefined) {
       groupTimePackage['data'] = new Array();
+   }
+
+   if (groupTimePackage['names'] == undefined) {
+      groupTimePackage['names'] = new Array();
+   }
       
    groupTimePackage['data'].push(groupTime);
+   groupTimePackage['names'].push(gName);
    
    groupCount++;
    if(groupCount >= globGroupCount || groupCount >= limitedGroupCount)
@@ -112,7 +118,7 @@ var setGroupTime = function (errorGroup, gID, res) {
       groupTime[idx][1] = idx;
    }
    
-   finishedErrorGroupTime(res);
+   finishedErrorGroupTime(res, errorGroup[0].type);
 }
 
 var setGroup = function (errorGroup, gID, res) {
