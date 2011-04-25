@@ -39,6 +39,10 @@ div {
   display: block;
 }
 
+#groupName {
+   font-size: 60%;
+}
+
 #placeholder div, #overview div{
    margin: 0px;
    padding: 0px;

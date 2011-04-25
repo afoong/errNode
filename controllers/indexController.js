@@ -98,7 +98,7 @@ var setErrCountCount = function (num) {
 	finishedErrCount();
 }
 
-var setGroupTime = function (errorGroup, gID, res) {
+var setGroupTime = function (errorGroup, gID, gMsg, res) {
 
    var idx = 0;
    if(neverSet) { // first time thru => lowest time (min)
@@ -120,7 +120,7 @@ var setGroupTime = function (errorGroup, gID, res) {
       groupTime[idx][1] = idx;
    }
    
-   finishedErrorGroupTime(res, errorGroup[0].type + ' - ' + groupID);
+   finishedErrorGroupTime(res, gMsg);
 }
 
 var setGroup = function (errorGroup, gID, res) {
@@ -234,16 +234,51 @@ var groupID = "";
 var groupTime = new Array();
 var groupsTimes = new Array();
 var groupTimePackage = {};
+var eGrpCounts = new Array();
 
 var neverSet = true;
+var counted = 0;
 
-var processEachGroup = function (gID, res) {
+var sorterfun = function(a, b) {
+   return b.count - a.count;
+}
+
+var countEachGroup = function (group, res) {
+   globDB.collection('errors', function(err, collection) {
+      collection.find({'group-id' : group._id}, {sort:[['time', 1]]}, function(err, errorGroup) {
+         errorGroup.count(function(err, c) {
+            var data = {};
+            data.id = group._id;
+            data.msg = group.msg;
+            data.count = c;
+            eGrpCounts.push(data);
+
+            if(eGrpCounts.length >= globGroupCount) {
+               eGrpCounts.sort(sorterfun);
+
+               limitedGroupCount = 10;
+
+               if(limitedGroupCount < 1 || limitedGroupCount > eGrpCounts.length)
+                  limitedGroupCount = eGrpCounts.length;
+
+               for(var i = 0; i < limitedGroupCount; i++) {
+                  console.log(eGrpCounts[i]);
+                  processEachGroup(eGrpCounts[i].id, eGrpCounts[i].msg, res);
+               }
+               //console.log(eGrpCounts);
+            }
+         });
+      });
+   });
+}
+
+var processEachGroup = function (gID, gMsg, res) {
    globDB.collection('errors', function(err, collection) {
       collection.find({'group-id' : gID}, {sort:[['time', 1]]}, function(err, errorGroup) {
          //console.log("--" + gID);
          errorGroup.toArray(function(err, c) {
             //setGroup(c, gID, res);   
-            setGroupTime(c, gID, res);
+            setGroupTime(c, gID, gMsg, res);
          });
       });
    });
@@ -316,13 +351,29 @@ var getInfo = function (db, res) {
       });   
 
       groupCount = 0;
+      /*
       limitedGroupCount = 20;
       var limitSet = {};
       if(limitedGroupCount > 0) {
          limitSet.limit = limitedGroupCount;
       }
-      
-      globDB.collection('groups', function(err, collection) {  
+      */
+        
+      eGrpCounts.length = 0;
+
+      globDB.collection('groups', function(err, collection) {
+         collection.find({}, {}, function(err, cursor) {  
+            //globGroupCount = cursor.length;
+           cursor.each(function(err, group) {  
+             if(group) {
+               countEachGroup(group, res); 
+             }
+            });  
+         });  
+      }); 
+
+         /*
+      globDB.collection('groups', function(err, collection) {
          collection.find({}, limitSet, function(err, cursor) {  
             //globGroupCount = cursor.length;
            cursor.each(function(err, group) {  
@@ -330,7 +381,7 @@ var getInfo = function (db, res) {
                //console.log(group._id);
                groupErrors[group._id] = {};
                groupErrors[group._id].label = group._id;
-               processEachGroup(group._id, res);
+               processEachGroup(group._id, group.msg, res);
                //errorsForGroup(JSON.stringify(group._id), res);
                
                
@@ -338,6 +389,7 @@ var getInfo = function (db, res) {
             });  
          });  
       }); 
+      */
       
    });
 }

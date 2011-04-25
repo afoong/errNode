@@ -22,10 +22,13 @@ $(document).ready(function(){
       });
    });
 
-   var setGraph = function (index, populateSelect) {
+   var setGraph = function (gIdx, populateSelect) {
       $.getJSON('/time.json', function(datasets) {
 
+         var index = gIdx;
          console.log(datasets);
+         if(populateSelect)
+            index = datasets.data.length - 1;
 
          var d = datasets.data[index];
          var minTime = new Date(datasets.minTime);
@@ -98,7 +101,7 @@ $(document).ready(function(){
 
          // populate select 
          if(populateSelect) {
-            for(var i = 0; i < datasets.data.length; i++) {
+            for(var i = datasets.data.length; i >= 0; i--) {
                $("#selector").
                    append($("<option></option>").
                    attr("value",i).
