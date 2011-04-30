@@ -26,7 +26,10 @@ $(document).ready(function(){
       $.getJSON('/time.json', function(datasets) {
 
          var index = gIdx;
-         console.log(datasets);
+         if (window.console) {
+
+            console.log(datasets);
+         }
          if(populateSelect)
             index = datasets.data.length - 1;
 
@@ -34,7 +37,10 @@ $(document).ready(function(){
          var minTime = new Date(datasets.minTime);
          var gName = datasets.names[index];
 
-         console.log(gName);
+         if (window.console) {
+
+            console.log(gName);
+         }
 
          document.getElementById('groupName').innerHTML = gName;
 
