@@ -129,6 +129,54 @@ $(document).ready(function(){
 
    
    $(setGraph(1, true));
+
+   var setTurningSeriesGraph = function() {
+      $.getJSON('/turningSeries.json', function(datasets) {
+         if(window.console) {
+            console.log("turning: " + JSON.stringify(datasets));
+         }
+         
+       // hard-code color indices to prevent them from shifting as
+       // countries are turned on/off
+       var i = 0;
+       $.each(datasets, function(key, val) {
+           val.color = i;
+           ++i;
+       });
+       
+       // insert checkboxes 
+       var choiceContainer = $("#choices");
+       $.each(datasets, function(key, val) {
+           choiceContainer.append('<input type="checkbox" name="' + key +
+                                  '" checked="checked" id="id' + key + '">' +
+                                  '<label for="id' + key + '">'
+                                   + val.label + '</label><br />');
+       });
+       choiceContainer.find("input").click(plotAccordingToChoices);
+
+       
+       function plotAccordingToChoices() {
+           var data = [];
+
+           choiceContainer.find("input:checked").each(function () {
+               var key = $(this).attr("name");
+               if (key && datasets[key])
+                   data.push(datasets[key]);
+           });
+
+           if (data.length > 0)
+               $.plot($("#placeholder1"), data, {
+                  legend: {container: $("#legendTurningSeries")},
+                   yaxis: { min: 0 },
+                   xaxis: { mode: "time", tickDecimals: 0 }
+               });
+       }
+
+       plotAccordingToChoices();
+      });
+   }
+   
+   $(setTurningSeriesGraph);
 });
 
 

@@ -43,12 +43,29 @@ div {
    font-size: 60%;
 }
 
-#placeholder div, #overview div{
+#choices
+{
+   width: 45%;
+   float: left;
+}
+
+#legendTurningSeries
+{
+   width: 45%;
+   float: left;
+}
+
+#next
+{
+   clear: both;
+}
+
+#placeholder div, #overview div, #placeholder1 div, #choices div, #legendTurningSeries div {
    margin: 0px;
    padding: 0px;
 }
 
-#placeholder {
+#placeholder, #placeholder1, #choices, #legendTurningSeries {
    margin: 20px;
    padding: 20px;
    margin-left:auto;

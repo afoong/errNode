@@ -1,8 +1,8 @@
 PORT = 8024;
 DBPORT = 27017;
 
-//HOST = 'localhost';
-HOST = 'li21-127.members.linode.com';
+HOST = 'localhost';
+//HOST = 'li21-127.members.linode.com';
 
 var sys = require('sys'),
 http = require('http'),

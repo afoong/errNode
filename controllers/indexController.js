@@ -110,6 +110,16 @@ var setGroupTime = function (errorGroup, gID, gMsg, res) {
    var numYears = 0;
    var idTxt = (''+gID);
    var groupID = idTxt.substring(idTxt.length-9, idTxt.length);
+
+   var grpName = new Array();
+   //console.log(errorGroup[0]._id);
+   
+   //console.log(errorGroup[0].msg.split(/[ ]+/));
+
+   for (idx = 0; idx < errorGroup[0].msg.split(/[ ]+/).length; idx++)
+   {
+      grpName.push(errorGroup[0].msg.split(/[ ]+/)[idx]);
+   }
    
    for (idx = 0; idx < errorGroup.length; idx++) {
 
@@ -118,9 +128,26 @@ var setGroupTime = function (errorGroup, gID, gMsg, res) {
       }
       groupTime[idx][0] = errorGroup[idx].time * 1000;
       groupTime[idx][1] = idx;
+
+      //console.log(errorGroup[idx].msg.split(/[ ]+/));
+
+      for(var i = 0; i < errorGroup[idx].msg.split(/[ ]+/).length; i++)
+      {
+         if (i < grpName.length)
+         {
+            if(grpName[i] != errorGroup[idx].msg.split(/[ ]+/)[i]) {
+               grpName[i] = '*';
+            }
+         }
+         else
+         {
+            grpName.push('*');
+         }
+      }
    }
+   //console.log("\n\n");
    
-   finishedErrorGroupTime(res, gMsg);
+   finishedErrorGroupTime(res, grpName.join(' ')/* + ' --was-- ' + gMsg*/);
 }
 
 var setGroup = function (errorGroup, gID, res) {
@@ -243,6 +270,21 @@ var sorterfun = function(a, b) {
    return b.count - a.count;
 }
 
+var turningSeriesDocument = function(timeDataSet) {
+   var doc = {};
+   for(var i = 0; i < timeDataSet.data.length; i++) {
+      doc[""+timeDataSet.names[i]] = {};
+      doc[""+timeDataSet.names[i]].label = ""+timeDataSet.names[i];
+      doc[""+timeDataSet.names[i]].data = new Array();
+
+      for(var q = 0; q < timeDataSet.data[i].length; q++) {
+         doc[""+timeDataSet.names[i]].data.push(timeDataSet.data[i][q]);  
+      }
+   }
+
+   return doc;
+}
+
 var countEachGroup = function (group, res) {
    globDB.collection('errors', function(err, collection) {
       collection.find({'group-id' : group._id}, {sort:[['time', 1]]}, function(err, errorGroup) {
@@ -262,7 +304,7 @@ var countEachGroup = function (group, res) {
                   limitedGroupCount = eGrpCounts.length;
 
                for(var i = 0; i < limitedGroupCount; i++) {
-                  console.log(eGrpCounts[i]);
+                  //console.log(eGrpCounts[i]);
                   processEachGroup(eGrpCounts[i].id, eGrpCounts[i].msg, res);
                }
                //console.log(eGrpCounts);
@@ -412,6 +454,13 @@ app.get('/time.json', function(req, res) {
    res.charset = 'UTF-8'; 
    res.header('Content-Type', 'application/json'); 
    res.write(JSON.stringify(groupTimePackage));
+   res.end(); 
+});
+
+app.get('/turningSeries.json', function(req, res) {
+   res.charset = 'UTF-8'; 
+   res.header('Content-Type', 'application/json'); 
+   res.write(JSON.stringify(turningSeriesDocument(groupTimePackage)));
    res.end(); 
 });
 
