@@ -58,6 +58,11 @@ div {
 #next
 {
    clear: both;
+   height: 50px;
+   width: 25%;
+   background-repeat: no-repeat;
+   background-position:bottom left;
+   background-image:url('../dinosaur.png');
 }
 
 #placeholder div, #overview div, #placeholder1 div, #choices div, #legendTurningSeries div {
