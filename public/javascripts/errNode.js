@@ -148,6 +148,12 @@ $(document).ready(function(){
            // don't fire event on the overview to prevent eternal loop
            overview.setSelection(ranges, true);
          });
+         
+          $("#showAll").click(function () {
+              plot = $.plot($("#placeholder"), [{data: d, label:"Time = 0"}, {data: d, label:"Count = 0"}], options);
+              plot.clearSelection();
+              overview.clearSelection();
+          });
 
          $("#overview").bind("plotselected", function (event, ranges) {
            plot.setSelection(ranges);
@@ -166,7 +172,7 @@ $(document).ready(function(){
       });  
      
    };
-
+   
             
    $("#selector").change(function () {
       $("select option:selected").each(function () {
