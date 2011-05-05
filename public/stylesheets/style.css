@@ -55,11 +55,15 @@ div {
    float: left;
 }
 
-#next
+#nextDino
 {
    clear: both;
-   height: 50px;
-   width: 25%;
+   height: 1.8em;
+   padding-left: 6%;
+   width: 3em;
+   float:left;
+   text-align: center;
+   margin-left:43%;
    background-repeat: no-repeat;
    background-position:bottom left;
    background-image:url('../dinosaur.png');

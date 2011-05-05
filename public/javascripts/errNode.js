@@ -22,13 +22,17 @@ $(document).ready(function(){
       });
    });
 
+   var currVal = 0;
+   var numGraphs = 0;
+
    var setGraph = function (gIdx, populateSelect) {
       $.getJSON('/time.json', function(datasets) {
-
+         numGraphs = datasets.data.length;
+         
          var index = gIdx;
          if (window.console) {
 
-            console.log(datasets);
+            //console.log(datasets);
          }
          if(populateSelect)
             index = datasets.data.length - 1;
@@ -39,7 +43,7 @@ $(document).ready(function(){
 
          if (window.console) {
 
-            console.log(gName);
+            //console.log(gName);
          }
 
          document.getElementById('groupName').innerHTML = gName;
@@ -70,15 +74,67 @@ $(document).ready(function(){
            return markings;
          }
 
-         var options = {
+         var options = {    
+           points: { show: true },
            series: {
               lines: { show: true }
            },
            xaxis: { mode: "time", tickLength: 5 },
            selection: { mode: "x" },
            crosshair: { mode: "x", lineWidth: 1 },
-           grid: { hoverable: true, autoHighlight: false, markings: weekendAreas }
+           grid: { hoverable: true, clickable: true, autoHighlight: false, markings: weekendAreas },    
+           legend: {show: true, position: 'nw'}
+
          };
+
+            function showTooltip(x, y, contents) {
+        $('<div id="tooltip">' + contents + '</div>').css( {
+            position: 'absolute',
+            display: 'none',
+            top: y + 5,
+            left: x + 5,
+            border: '1px solid #fdd',
+            padding: '2px',
+            'background-color': '#fee',
+            opacity: 0.80,
+            '-moz-border-radius': '5px',
+            'border-radius': '5px'
+        }).appendTo("body").fadeIn(200);
+    }
+
+    var previousPoint = null;
+    $("#placeholder").bind("plothover", function (event, pos, item) {
+         $("#x").text(pos.x.toFixed(2));
+         $("#y").text(pos.y.toFixed(2));
+
+         if (item) {
+             if (previousPoint != item.dataIndex) {
+                 previousPoint = item.dataIndex;
+                 
+                 $("#tooltip").remove();
+                 var x = item.datapoint[0].toFixed(2),
+                     y = item.datapoint[1].toFixed(2);
+                 
+                 showTooltip(item.pageX, item.pageY,
+                             "hardcoded ip address 127.0.0.1");
+             }
+         }
+         else {
+             $("#tooltip").remove();
+             previousPoint = null;            
+         }
+    });
+
+    $("#placeholder").bind("plotclick", function (event, pos, item) {
+        if (item) {
+            $("#clickdata").text("If you tracked ip's in MongoDB you could see who made this " + item.datapoint[1] + 'th error @ 127.0.0.1 and punish them accordingly');
+            plot.highlight(item.series, item.datapoint);
+        }
+    });
+
+    $(".message").click(function() {
+      $(this).text("");
+    });
 
          var plot = $.plot($("#placeholder"), [{data: d, label:"Time = 0"}, {data: d, label:"Count = 0"}], options);
 
@@ -95,7 +151,7 @@ $(document).ready(function(){
        var updateLegendTimeout = null;
        var latestPosition = null;
        
-       function updateLegend() {
+       function updateSelectGraphLegend() {
        
             var legends = $("#placeholder .legendLabel");
             legends.each(function () {
@@ -119,22 +175,25 @@ $(document).ready(function(){
                for (j = 0; j < series.data.length; ++j)
                    if (series.data[j][0] > pos.x)
                        break;
-               
+
                // now interpolate
                var y, p1 = series.data[j];
 
+               if(p1) {
                
-           var da = new Date(p1[0]);
+                  var da = new Date(p1[0]);
 
-               legends.eq(0).text(series.label.replace(/=.*/, "= " + da.toDateString()));
-               legends.eq(1).text(series.label.replace(/=.*/, "= " + p1[1]));
+                  legends.eq(0).text(series.label.replace(/=.*/, "= " + da.toDateString()));
+                  legends.eq(1).text(series.label.replace(/=.*/, "= " + p1[1]));
+               }
+               
            }
        }
        
        $("#placeholder").bind("plothover",  function (event, pos, item) {
            latestPosition = pos;
            if (!updateLegendTimeout)
-               updateLegendTimeout = setTimeout(updateLegend, 50);
+               updateLegendTimeout = setTimeout(updateSelectGraphLegend, 50);
        });
          // now connect the two
 
@@ -171,12 +230,21 @@ $(document).ready(function(){
          
       });  
      
+
    };
    
+   $("#next").click(function () {
+      if(window.console) {
+         //console.log("next selctor");
+      }
+         $('#selector').find(' option:selected', 'select').removeAttr('selected').next('option').attr('selected', 'selected');
+         $('#selector').trigger('change');
+   });
             
    $("#selector").change(function () {
       $("select option:selected").each(function () {
          setGraph($(this).val(), false);
+         currVal = $(this).val();
       });
    })
    .change();  
@@ -187,7 +255,7 @@ $(document).ready(function(){
    var setTurningSeriesGraph = function() {
       $.getJSON('/turningSeries.json', function(datasets) {
          if(window.console) {
-            console.log("turning: " + JSON.stringify(datasets));
+            //console.log("turning: " + JSON.stringify(datasets));
          }
          
        // hard-code color indices to prevent them from shifting as
