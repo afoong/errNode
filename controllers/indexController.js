@@ -37,7 +37,7 @@ var finishedErrCount =  function(res) {
    //groupCount++;
 }
 
-var finishedErrorGroupTime =  function(res, gName) {
+var finishedErrorGroupTime =  function(res, gName, gIds) {
    groupsTimes.push(groupTime);
    
    if(groupTimePackage['data'] == undefined) {
@@ -47,9 +47,14 @@ var finishedErrorGroupTime =  function(res, gName) {
    if (groupTimePackage['names'] == undefined) {
       groupTimePackage['names'] = new Array();
    }
+
+   if(groupTimePackage['gids'] == undefined){
+      groupTimePackage['gids'] = new Array();
+   }
       
    groupTimePackage['data'].push(groupTime);
    groupTimePackage['names'].push(gName);
+   groupTimePackage['gids'].push(gIds);
    
    groupCount++;
    if(groupCount >= globGroupCount || (groupCount >= limitedGroupCount && limitedGroupCount > 0))
@@ -147,7 +152,7 @@ var setGroupTime = function (errorGroup, gID, gMsg, res) {
    }
    //console.log("\n\n");
    
-   finishedErrorGroupTime(res, grpName.join(' ')/* + ' --was-- ' + gMsg*/);
+   finishedErrorGroupTime(res, grpName.join(' '), idTxt/* + ' --was-- ' + gMsg*/);
 }
 
 var setGroup = function (errorGroup, gID, res) {

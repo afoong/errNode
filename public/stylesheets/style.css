@@ -55,6 +55,36 @@ div {
    float: left;
 }
 
+#errorMessageOverlay
+{
+   display: none;
+   float: left;
+   position: absolute;
+   margin: auto;
+   background-color: #06799F;
+   z-index: 100;
+}
+
+#groupID
+{
+   background-color: #62B4CF;
+}
+
+#overlayGroupID, #overlayGroupName 
+{
+   color: #0D8800;
+}
+
+button
+{
+   margin: 5px;
+}
+
+#closeErrorMessages
+{
+   margin-left: 90%;
+}
+
 #nextDino
 {
    clear: both;

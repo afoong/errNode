@@ -47,6 +47,10 @@ $(document).ready(function(){
          }
 
          document.getElementById('groupName').innerHTML = gName;
+         document.getElementById('groupID').innerHTML = "You have selected group ID: " + datasets.gids[index];
+         $('#groupID').show();
+         $('#overlayGroupID').text(datasets.gids[index]);
+         $('#overlayGroupName').text(gName);
 
        // first correct the timestamps - they are recorded as the daily
        // midnights in UTC+0100, but Flot always displays dates in UTC
@@ -112,11 +116,11 @@ $(document).ready(function(){
                  previousPoint = item.dataIndex;
                  
                  $("#tooltip").remove();
-                 var x = item.datapoint[0].toFixed(2),
-                     y = item.datapoint[1].toFixed(2);
+                 var x = item.datapoint[0],
+                     y = item.datapoint[1];
                  
                  showTooltip(item.pageX, item.pageY,
-                             "hardcoded ip address 127.0.0.1");
+                             "Error " + y + " of " + (d.length-1) + " made on " + new Date(x).toDateString());
              }
          }
          else {
@@ -127,7 +131,7 @@ $(document).ready(function(){
 
     $("#placeholder").bind("plotclick", function (event, pos, item) {
         if (item) {
-            $("#clickdata").show().text("If you tracked ip's in MongoDB you could see who made this " + item.datapoint[1] + 'th error @ 127.0.0.1 and punish them accordingly');
+            $("#clickdata").show().text("The " + item.datapoint[1] + 'th error in this group was created on ' + new Date(item.datapoint[0]));
             plot.highlight(item.series, item.datapoint);
         }
     });
@@ -228,7 +232,18 @@ $(document).ready(function(){
      
 
    };
-   
+
+    $('#showErrorMessages').click(function() {
+      $('#errorMessageOverlay').toggle();
+      /*$(this).children().each(function() {
+         $(this).show();
+      });*/
+    });
+
+    $('#closeErrorMessages').click(function() {
+      $(this).parent().hide();
+    });
+    
     $(".message").click(function() {
       $(this).text("");
     });

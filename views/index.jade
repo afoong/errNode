@@ -7,13 +7,25 @@ h1
 
 div#groupSelect
    select#selector 
+   div#groupID.message.bye
    div.message.bye Click a message (including this one) to clear it!
    div.message.bye Please be patient while the graphs render, there can be a lot of data.
 
 div
-   button#showAll Show All
-   button#next Next
+   button#showAll Reset Time Frame
+   button#next Next Error Group
+   button#showErrorMessages Toggle Messages Overlay for Error Group
    div#clickdata.message.bye
+   div#errorMessageOverlay
+      button#closeErrorMessages [X]
+      div#errorMessagesInGroup 
+         | Group ID: 
+         span#overlayGroupID
+         br
+         | Group Name: 
+         span#overlayGroupName
+         div#errorMessage work in progress message 1
+         div#errorMessage work in progress message 2
    div#placeholder(style="width:700px;height:300px;")
 div
    div#overview(style="margin-left:50px;margin-top:20px;width:500px;height:90px")
