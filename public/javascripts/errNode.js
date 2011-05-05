@@ -127,13 +127,9 @@ $(document).ready(function(){
 
     $("#placeholder").bind("plotclick", function (event, pos, item) {
         if (item) {
-            $("#clickdata").text("If you tracked ip's in MongoDB you could see who made this " + item.datapoint[1] + 'th error @ 127.0.0.1 and punish them accordingly');
+            $("#clickdata").show().text("If you tracked ip's in MongoDB you could see who made this " + item.datapoint[1] + 'th error @ 127.0.0.1 and punish them accordingly');
             plot.highlight(item.series, item.datapoint);
         }
-    });
-
-    $(".message").click(function() {
-      $(this).text("");
     });
 
          var plot = $.plot($("#placeholder"), [{data: d, label:"Time = 0"}, {data: d, label:"Count = 0"}], options);
@@ -232,6 +228,14 @@ $(document).ready(function(){
      
 
    };
+   
+    $(".message").click(function() {
+      $(this).text("");
+    });
+    
+    $(".bye").click(function() {
+      $(this).hide();
+    });
    
    $("#next").click(function () {
       if(window.console) {
