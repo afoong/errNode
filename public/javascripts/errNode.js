@@ -71,12 +71,16 @@ $(document).ready(function(){
          }
 
          var options = {
+           series: {
+              lines: { show: true }
+           },
            xaxis: { mode: "time", tickLength: 5 },
            selection: { mode: "x" },
-           grid: { markings: weekendAreas }
+           crosshair: { mode: "x", lineWidth: 1 },
+           grid: { hoverable: true, autoHighlight: false, markings: weekendAreas }
          };
 
-         var plot = $.plot($("#placeholder"), [d], options);
+         var plot = $.plot($("#placeholder"), [{data: d, label:"Time = 0"}, {data: d, label:"Count = 0"}], options);
 
          var overview = $.plot($("#overview"), [d], {
            series: {
@@ -88,11 +92,55 @@ $(document).ready(function(){
            selection: { mode: "x" }
          });
 
+       var updateLegendTimeout = null;
+       var latestPosition = null;
+       
+       function updateLegend() {
+       
+            var legends = $("#placeholder .legendLabel");
+            legends.each(function () {
+                 // fix the widths so they don't jump around
+                 $(this).css('width', $(this).width());
+            });
+           updateLegendTimeout = null;
+           
+           var pos = latestPosition;
+           
+           var axes = plot.getAxes();
+           if (pos.x < axes.xaxis.min || pos.x > axes.xaxis.max ||
+               pos.y < axes.yaxis.min || pos.y > axes.yaxis.max)
+               return;
+
+           var i, j, dataset = plot.getData();
+           for (i = 0; i < dataset.length; ++i) {
+               var series = dataset[i];
+
+               // find the nearest points, x-wise
+               for (j = 0; j < series.data.length; ++j)
+                   if (series.data[j][0] > pos.x)
+                       break;
+               
+               // now interpolate
+               var y, p1 = series.data[j];
+
+               
+           var da = new Date(p1[0]);
+
+               legends.eq(0).text(series.label.replace(/=.*/, "= " + da.toDateString()));
+               legends.eq(1).text(series.label.replace(/=.*/, "= " + p1[1]));
+           }
+       }
+       
+       $("#placeholder").bind("plothover",  function (event, pos, item) {
+           latestPosition = pos;
+           if (!updateLegendTimeout)
+               updateLegendTimeout = setTimeout(updateLegend, 50);
+       });
          // now connect the two
 
          $("#placeholder").bind("plotselected", function (event, ranges) {
            // do the zooming
-           plot = $.plot($("#placeholder"), [d],
+           plot = $.plot($("#placeholder"),  [{data: d, label:"Time = 0"}, {data: d, label:"Count = 0"}],
                          $.extend(true, {}, options, {
                              xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
                          }));
