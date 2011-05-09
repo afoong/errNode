@@ -72,8 +72,11 @@ div {
 		display: none;
 		position: absolute;
 		float:left;
-		width: 100%;
+		width:85%;
 		height: 100%;
+		margin:10px;
+      -moz-border-radius: 20px;
+      border-radius: 20px;
 		background-color: black;
 		z-index:1001;
 		-moz-opacity: 0.8;
@@ -85,10 +88,11 @@ div {
 {
 		display: none;
 		position: absolute;
-		top: 25%;
-		left: 25%;
+		top: 20%;
+		left: 20%;
 		margin: auto;
 		padding: auto;
+		font-size: 6em;
 		border: 16px solid #274E7D;
 		background-color: white;
 		text-align: center;
