@@ -7,13 +7,6 @@ $(document).ready(function(){
       });
    });
 
-   // shows all hiden items
-   $("#showAll").click(function() {
-     $(":hidden", ".y").each(function() {
-         $(this).show('slow');
-      });
-   });
-
    // hides the month data on year click
    $(".year").each(function() {
       $(this).click(function() {
