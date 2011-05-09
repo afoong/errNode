@@ -354,11 +354,9 @@ $(document).ready(function(){
                                    $.extend(true, {}, options, {
                                        xaxis: { min: rangesArr.xfrom, max: rangesArr.xto }
                                    }));
-                                   console.log("1");
                }
                else {
                   $.plot(placeholder1, data, options);
-                                   console.log("2");
                }
 
                
@@ -380,21 +378,22 @@ $(document).ready(function(){
               plot.clearSelection();
               prevRange = false;
           });
-
+         
        }
+
+      $("#restoreAllSeries").click(function() {
+         $("#choices").children().each(function(){
+               if(!$(this).attr('checked'))
+                  $(this).trigger('click');
+         });
+         plotAccordingToChoices();
+      });
 
        plotAccordingToChoices();
 
        
       });
    }
-
-   $("#restoreAllSeries").click(function() {
-      $("#choices").children().each(function(){
-            if(!$(this).attr('checked'))
-               $(this).trigger('click');
-      });
-   });
    
    $(setTurningSeriesGraph);
 });
