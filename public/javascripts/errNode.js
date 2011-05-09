@@ -388,6 +388,13 @@ $(document).ready(function(){
        
       });
    }
+
+   $("#restoreAllSeries").click(function() {
+      $("#choices").children().each(function(){
+            if(!$(this).attr('checked'))
+               $(this).trigger('click');
+      });
+   });
    
    $(setTurningSeriesGraph);
 });
