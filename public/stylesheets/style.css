@@ -63,6 +63,43 @@ div {
    margin: auto;
    background-color: #06799F;
    z-index: 100;
+   height: 500px;
+   opacity: .80;
+}
+
+#bbox
+{
+		display: none;
+		position: absolute;
+		float:left;
+		width: 100%;
+		height: 100%;
+		background-color: black;
+		z-index:1001;
+		-moz-opacity: 0.8;
+		opacity:.80;
+		filter: alpha(opacity=80);
+}
+
+#loading
+{
+		display: none;
+		position: absolute;
+		top: 25%;
+		left: 25%;
+		margin: auto;
+		padding: auto;
+		border: 16px solid #274E7D;
+		background-color: white;
+		text-align: center;
+		z-index:1002;
+		overflow: auto;
+}
+
+#messagesList
+{
+   height:350px;
+   overflow: scroll;
 }
 
 #groupID

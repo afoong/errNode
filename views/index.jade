@@ -5,6 +5,9 @@ h1
       | _**MONGO**_ brings you data regarding: 
    div#groupName #{title}
 
+div#bbox
+   div#loading loading ... 
+
 div#groupSelect
    select#selector 
    div#groupID.message.bye
@@ -24,13 +27,14 @@ div
          br
          | Group Name: 
          span#overlayGroupName
-         div#errorMessage work in progress message 1
-         div#errorMessage work in progress message 2
+         div#messagesList
+            ul#grpMessageList
    div#placeholder(style="width:700px;height:300px;")
 div
    div#overview(style="margin-left:50px;margin-top:20px;width:500px;height:90px")
 
 div
+   button#showAll2 Reset Time Frame
    div#placeholder1(style="width:800px;height:300px;")
    div#choices
    div#legendTurningSeries

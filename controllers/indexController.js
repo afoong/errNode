@@ -37,7 +37,7 @@ var finishedErrCount =  function(res) {
    //groupCount++;
 }
 
-var finishedErrorGroupTime =  function(res, gName, gIds) {
+var finishedErrorGroupTime =  function(res, gName, gIds, gMsgs) {
    groupsTimes.push(groupTime);
    
    if(groupTimePackage['data'] == undefined) {
@@ -47,6 +47,10 @@ var finishedErrorGroupTime =  function(res, gName, gIds) {
    if (groupTimePackage['names'] == undefined) {
       groupTimePackage['names'] = new Array();
    }
+   
+   if (groupTimePackage['messages'] == undefined) {
+      groupTimePackage['messages'] = new Array();
+   }
 
    if(groupTimePackage['gids'] == undefined){
       groupTimePackage['gids'] = new Array();
@@ -55,6 +59,7 @@ var finishedErrorGroupTime =  function(res, gName, gIds) {
    groupTimePackage['data'].push(groupTime);
    groupTimePackage['names'].push(gName);
    groupTimePackage['gids'].push(gIds);
+   groupTimePackage['messages'].push(gMsgs);
    
    groupCount++;
    if(groupCount >= globGroupCount || (groupCount >= limitedGroupCount && limitedGroupCount > 0))
@@ -117,6 +122,7 @@ var setGroupTime = function (errorGroup, gID, gMsg, res) {
    var groupID = idTxt.substring(idTxt.length-9, idTxt.length);
 
    var grpName = new Array();
+   var grpMessages = new Array();
    //console.log(errorGroup[0]._id);
    
    //console.log(errorGroup[0].msg.split(/[ ]+/));
@@ -128,6 +134,8 @@ var setGroupTime = function (errorGroup, gID, gMsg, res) {
    
    for (idx = 0; idx < errorGroup.length; idx++) {
 
+      grpMessages.push(errorGroup[idx].msg);
+      
       if(groupTime[idx] == undefined) {
          groupTime[idx] = new Array();
       }
@@ -152,7 +160,7 @@ var setGroupTime = function (errorGroup, gID, gMsg, res) {
    }
    //console.log("\n\n");
    
-   finishedErrorGroupTime(res, grpName.join(' '), idTxt/* + ' --was-- ' + gMsg*/);
+   finishedErrorGroupTime(res, grpName.join(' '), idTxt, grpMessages/* + ' --was-- ' + gMsg*/);
 }
 
 var setGroup = function (errorGroup, gID, res) {

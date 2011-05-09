@@ -26,14 +26,13 @@ $(document).ready(function(){
    var numGraphs = 0;
 
    var setGraph = function (gIdx, populateSelect) {
+      $("#bbox").show();
+      $("#loading").show();
       $.getJSON('/time.json', function(datasets) {
          numGraphs = datasets.data.length;
          
          var index = gIdx;
-         if (window.console) {
-
-            //console.log(datasets);
-         }
+         
          if(populateSelect)
             index = datasets.data.length - 1;
 
@@ -41,10 +40,6 @@ $(document).ready(function(){
          var minTime = new Date(datasets.minTime);
          var gName = datasets.names[index];
 
-         if (window.console) {
-
-            //console.log(gName);
-         }
 
          document.getElementById('groupName').innerHTML = gName;
          document.getElementById('groupID').innerHTML = "You have selected group ID: " + datasets.gids[index];
@@ -183,8 +178,8 @@ $(document).ready(function(){
                
                   var da = new Date(p1[0]);
 
-                  legends.eq(0).text(series.label.replace(/=.*/, "= " + da.toDateString()));
-                  legends.eq(1).text(series.label.replace(/=.*/, "= " + p1[1]));
+                  legends.eq(0).text("Time = " + da.toDateString());
+                  legends.eq(1).text("Count = " + p1[1]);
                }
                
            }
@@ -227,7 +222,17 @@ $(document).ready(function(){
                    text(datasets.names[i])); 
             }      
          }
+
          
+         $("#grpMessageList").empty();
+         var gml = $("#grpMessageList");
+         for(var i = 0; i < datasets.messages[index].length; i++) {
+            //console.log(datasets.messages[index][i]);
+            gml.after("<li class=\"grpMsg\">"+datasets.messages[index][i]+"</li>");
+         }
+         
+         $("#bbox").hide();
+         $("#loading").hide();
       });  
      
 
@@ -294,7 +299,6 @@ $(document).ready(function(){
                                    + val.label + '</label><br />');
        });
        choiceContainer.find("input").click(plotAccordingToChoices);
-
        
        function plotAccordingToChoices() {
            var data = [];
@@ -305,15 +309,73 @@ $(document).ready(function(){
                    data.push(datasets[key]);
            });
 
-           if (data.length > 0)
-               $.plot($("#placeholder1"), data, {
-                  legend: {container: $("#legendTurningSeries")},
-                   yaxis: { min: 0 },
-                   xaxis: { mode: "time", tickDecimals: 0 }
-               });
+
+              
+          // first correct the timestamps - they are recorded as the daily
+          // midnights in UTC+0100, but Flot always displays dates in UTC
+          // so we have to add one hour to hit the midnights in the plot
+          for (var i = 0; i < data.length; ++i)
+            data[i][0] += 60 * 60 * 1000;
+
+            // helper for returning the weekends in a period
+            function weekendAreas(axes) {
+              var markings = [];
+              var d = new Date(axes.xaxis.min);
+              // go to the first Saturday
+              d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7))
+              d.setUTCSeconds(0);
+              d.setUTCMinutes(0);
+              d.setUTCHours(0);
+              var i = d.getTime();
+              do {
+                  // when we don't set yaxis, the rectangle automatically
+                  // extends to infinity upwards and downwards
+                  markings.push({ xaxis: { from: i, to: i + 2 * 24 * 60 * 60 * 1000 } });
+                  i += 7 * 24 * 60 * 60 * 1000;
+              } while (i < axes.xaxis.max);
+
+              return markings;
+            }
+
+          var options = {
+              series: {
+                  lines: { show: true },
+                  points: { show: false }
+              },
+              legend: { container: $("#legendTurningSeries") },
+              xaxis: { mode: "time", tickDecimals: 0 },
+              yaxis: { min: 0 },
+              selection: { mode: "x" },
+              crosshair: { mode: "x", lineWidth: 1 },
+              grid: { hoverable: true, clickable: true, autoHighlight: false, markings: weekendAreas },    
+          };
+          
+
+           if (data.length > 0) {
+               $.plot($("#placeholder1"), data, options);
+
+               
+             var placeholder1 = $("#placeholder1");
+
+             placeholder1.bind("plotselected", function (event, ranges) {
+                     plot = $.plot(placeholder1, data,
+                                   $.extend(true, {}, options, {
+                                       xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
+                                   }));
+             });
+          }
+
+                   
+          $("#showAll2").click(function () {
+              plot = $.plot($("#placeholder1"), data, options);
+              plot.clearSelection();
+          });
+
        }
 
        plotAccordingToChoices();
+
+       
       });
    }
    
