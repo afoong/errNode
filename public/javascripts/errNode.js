@@ -224,7 +224,7 @@ $(document).ready(function(){
          }
 
          
-         $("#grpMessageList").empty();
+         $(".grpMsg").remove();
          var gml = $("#grpMessageList");
          for(var i = 0; i < datasets.messages[index].length; i++) {
             //console.log(datasets.messages[index][i]);
