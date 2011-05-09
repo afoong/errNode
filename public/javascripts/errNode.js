@@ -292,6 +292,9 @@ $(document).ready(function(){
                                    + val.label + '</label><br />');
        });
        choiceContainer.find("input").click(plotAccordingToChoices);
+
+      var prevRange = false;
+      var rangesArr = {xfrom: 0, xto: 0};
        
        function plotAccordingToChoices() {
            var data = [];
@@ -344,17 +347,30 @@ $(document).ready(function(){
           };
           
 
+           var placeholder1 = $("#placeholder1");
            if (data.length > 0) {
-               $.plot($("#placeholder1"), data, options);
+               if(prevRange) {
+                  $.plot(placeholder1, data,
+                                   $.extend(true, {}, options, {
+                                       xaxis: { min: rangesArr.xfrom, max: rangesArr.xto }
+                                   }));
+                                   console.log("1");
+               }
+               else {
+                  $.plot(placeholder1, data, options);
+                                   console.log("2");
+               }
 
                
-             var placeholder1 = $("#placeholder1");
 
              placeholder1.bind("plotselected", function (event, ranges) {
                      plot = $.plot(placeholder1, data,
                                    $.extend(true, {}, options, {
                                        xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
                                    }));
+                     rangesArr.xfrom = ranges.xaxis.from;
+                     rangesArr.xto = ranges.xaxis.to;
+                     prevRange = true;
              });
           }
 
@@ -362,6 +378,7 @@ $(document).ready(function(){
           $("#showAll2").click(function () {
               plot = $.plot($("#placeholder1"), data, options);
               plot.clearSelection();
+              prevRange = false;
           });
 
        }
