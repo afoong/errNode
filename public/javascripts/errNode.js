@@ -139,9 +139,11 @@ $(document).ready(function(){
          var plot;
 
          if(graph1Set) {
+            plot2 = $.plot($("#placeholder"), [{data: d2, label:"Time = 0"}, {data: d2, label:"Count per Day = 0"}], options);
             plot = $.plot($("#placeholder"), [{data: d, label:"Time = 0"}, {data: d, label:"Count = 0"}], options);
          }
          else {
+            plot = $.plot($("#placeholder"), [{data: d, label:"Time = 0"}, {data: d, label:"Count = 0"}], options);
             plot2 = $.plot($("#placeholder"), [{data: d2, label:"Time = 0"}, {data: d2, label:"Count per Day = 0"}], options);
          }
 
