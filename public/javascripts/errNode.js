@@ -134,16 +134,14 @@ $(document).ready(function(){
         }
     });
 
-         var plot2;
+         var plot2 = $.plot($("#placeholder"), [{data: d2, label:"Time = 0"}, {data: d2, label:"Count per Day = 0"}], options)
 
-         var plot;
+         var plot = $.plot($("#placeholder"), [{data: d, label:"Time = 0"}, {data: d, label:"Count = 0"}], options);
 
          if(graph1Set) {
-            plot2 = $.plot($("#placeholder"), [{data: d2, label:"Time = 0"}, {data: d2, label:"Count per Day = 0"}], options);
             plot = $.plot($("#placeholder"), [{data: d, label:"Time = 0"}, {data: d, label:"Count = 0"}], options);
          }
          else {
-            plot = $.plot($("#placeholder"), [{data: d, label:"Time = 0"}, {data: d, label:"Count = 0"}], options);
             plot2 = $.plot($("#placeholder"), [{data: d2, label:"Time = 0"}, {data: d2, label:"Count per Day = 0"}], options);
          }
 
@@ -246,8 +244,10 @@ $(document).ready(function(){
            overview.setSelection(ranges, true);
            }
          });
-         
-          $("#showAll").click(function () {
+
+         $("#showAll").unbind("click").click(function () {
+            if(window.console)
+               console.log("showall");
             if(!graph1Set) {
               plot2 = $.plot($("#placeholder"), [{data: d2, label:"Time = 0"}, {data: d2, label:"Count per Day = 0"}], options);
               plot2.clearSelection();
@@ -260,12 +260,13 @@ $(document).ready(function(){
             }
           });
           
-          $("#showChangeGraph").click(function () {
+          $("#showChangeGraph").unbind("click").click(function () {
+            if(window.console)
+               console.log("graph1: " + graph1Set);
             if(graph1Set) {
               plot2 = $.plot($("#placeholder"), [{data: d2, label:"Time = 0"}, {data: d2, label:"Count per Day = 0"}], options);
               plot2.clearSelection();
               overview.clearSelection();
-              graph1Set = false;
               overview = $.plot($("#overview"), [d2], {
                  series: {
                      lines: { show: true, lineWidth: 1 },
@@ -289,8 +290,8 @@ $(document).ready(function(){
                  yaxis: { ticks: [], min: 0, autoscaleMargin: 0.1 },
                  selection: { mode: "x" }
                });
-              graph1Set = true;
             }
+            graph1Set = !graph1Set;
           });
 
          $("#overview").bind("plotselected", function (event, ranges) {
@@ -327,26 +328,26 @@ $(document).ready(function(){
 
    };
 
-    $('#showErrorMessages').click(function() {
+    $('#showErrorMessages').unbind("click").click(function() {
       $('#errorMessageOverlay').toggle();
       /*$(this).children().each(function() {
          $(this).show();
       });*/
     });
 
-    $('#closeErrorMessages').click(function() {
+    $('#closeErrorMessages').unbind("click").click(function() {
       $(this).parent().hide();
     });
     
-    $(".message").click(function() {
+    $(".message").unbind("click").click(function() {
       $(this).text("");
     });
     
-    $(".bye").click(function() {
+    $(".bye").unbind("click").click(function() {
       $(this).hide();
     });
    
-   $("#next").click(function () {
+   $("#next").unbind("click").click(function () {
       if(window.console) {
          //console.log("next selctor");
       }
@@ -387,7 +388,7 @@ $(document).ready(function(){
                                   '<label for="id' + key + '">'
                                    + val.label + '</label><br />');
        });
-       choiceContainer.find("input").click(plotAccordingToChoices);
+       choiceContainer.find("input").unbind("click").click(plotAccordingToChoices);
 
       var prevRange = false;
       var rangesArr = {xfrom: 0, xto: 0};
@@ -469,7 +470,7 @@ $(document).ready(function(){
           }
 
                    
-          $("#showAll2").click(function () {
+          $("#showAll2").unbind("click").click(function () {
               plot = $.plot($("#placeholder1"), data, options);
               plot.clearSelection();
               prevRange = false;
@@ -477,7 +478,7 @@ $(document).ready(function(){
          
        }
 
-      $("#restoreAllSeries").click(function() {
+      $("#restoreAllSeries").unbind("click").click(function() {
          $("#choices").children().each(function(){
                if(!$(this).attr('checked'))
                   $(this).trigger('click');
