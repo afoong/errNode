@@ -134,11 +134,23 @@ $(document).ready(function(){
         }
     });
 
-         var plot2 = $.plot($("#placeholder"), [{data: d2, label:"Time = 0"}, {data: d2, label:"Count per Day = 0"}], options);
+         var plot2;
 
-         var plot = $.plot($("#placeholder"), [{data: d, label:"Time = 0"}, {data: d, label:"Count = 0"}], options);
+         var plot;
 
-         var overview = $.plot($("#overview"), [d], {
+         if(graph1Set) {
+            plot = $.plot($("#placeholder"), [{data: d, label:"Time = 0"}, {data: d, label:"Count = 0"}], options);
+         }
+         else {
+            plot2 = $.plot($("#placeholder"), [{data: d2, label:"Time = 0"}, {data: d2, label:"Count per Day = 0"}], options);
+         }
+
+         var qq;
+         if(graph1Set)
+            qq = d;
+         else
+            qq = d2;
+         var overview = $.plot($("#overview"), [qq], {
            series: {
                lines: { show: true, lineWidth: 1 },
                shadowSize: 0
@@ -252,11 +264,29 @@ $(document).ready(function(){
               plot2.clearSelection();
               overview.clearSelection();
               graph1Set = false;
+              overview = $.plot($("#overview"), [d2], {
+                 series: {
+                     lines: { show: true, lineWidth: 1 },
+                     shadowSize: 0
+                 },
+                 xaxis: {mode: "time", ticks: [] },
+                 yaxis: { ticks: [], min: 0, autoscaleMargin: 0.1 },
+                 selection: { mode: "x" }
+               });
               }
             else {
               plot = $.plot($("#placeholder"), [{data: d, label:"Time = 0"}, {data: d, label:"Count = 0"}], options);
               plot.clearSelection();
               overview.clearSelection();
+              overview = $.plot($("#overview"), [d], {
+                 series: {
+                     lines: { show: true, lineWidth: 1 },
+                     shadowSize: 0
+                 },
+                 xaxis: {mode: "time", ticks: [] },
+                 yaxis: { ticks: [], min: 0, autoscaleMargin: 0.1 },
+                 selection: { mode: "x" }
+               });
               graph1Set = true;
             }
           });
