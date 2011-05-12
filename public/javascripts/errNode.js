@@ -17,6 +17,7 @@ $(document).ready(function(){
 
    var currVal = 0;
    var numGraphs = 0;
+   var graph1Set = true;
 
    var setGraph = function (gIdx, populateSelect) {
       $("#bbox").show();
@@ -30,6 +31,7 @@ $(document).ready(function(){
             index = datasets.data.length - 1;
 
          var d = datasets.data[index];
+         var d2 = datasets.data2[index];
          var minTime = new Date(datasets.minTime);
          var gName = datasets.names[index];
 
@@ -106,9 +108,15 @@ $(document).ready(function(){
                  $("#tooltip").remove();
                  var x = item.datapoint[0],
                      y = item.datapoint[1];
-                 
+
+                 if(graph1Set) {
                  showTooltip(item.pageX, item.pageY,
-                             "Error " + y + " of " + (d.length-1) + " made on " + new Date(x).toDateString());
+                             "Error " + y + " of " + (d.length) + " made on " + new Date(x).toDateString());
+                             }
+                  else {
+                     showTooltip(item.pageX, item.pageY,
+                             y + " new Errors " + " made on " + new Date(x).toDateString());
+                  }
              }
          }
          else {
@@ -123,6 +131,8 @@ $(document).ready(function(){
             plot.highlight(item.series, item.datapoint);
         }
     });
+
+         var plot2 = $.plot($("#placeholder"), [{data: d2, label:"Time = 0"}, {data: d2, label:"Count per Day = 0"}], options);
 
          var plot = $.plot($("#placeholder"), [{data: d, label:"Time = 0"}, {data: d, label:"Count = 0"}], options);
 
@@ -155,7 +165,15 @@ $(document).ready(function(){
                pos.y < axes.yaxis.min || pos.y > axes.yaxis.max)
                return;
 
-           var i, j, dataset = plot.getData();
+           var i, j;
+           var dataset;
+           if(graph1Set) {
+            dataset=plot.getData();
+           }
+           else
+           {
+            dataset=plot2.getData();
+           }
            for (i = 0; i < dataset.length; ++i) {
                var series = dataset[i];
 
@@ -170,9 +188,15 @@ $(document).ready(function(){
                if(p1) {
                
                   var da = new Date(p1[0]);
+                  
 
                   legends.eq(0).text("Time = " + da.toDateString());
-                  legends.eq(1).text("Count = " + p1[1]);
+                  if(graph1Set) {
+                     legends.eq(1).text("Count = " + p1[1]);
+                  }
+                  else {
+                     legends.eq(1).text("Count per Day = " + p1[1]);
+                  }
                }
                
            }
@@ -187,6 +211,7 @@ $(document).ready(function(){
 
          $("#placeholder").bind("plotselected", function (event, ranges) {
            // do the zooming
+           if(graph1Set) {
            plot = $.plot($("#placeholder"),  [{data: d, label:"Time = 0"}, {data: d, label:"Count = 0"}],
                          $.extend(true, {}, options, {
                              xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
@@ -194,16 +219,53 @@ $(document).ready(function(){
 
            // don't fire event on the overview to prevent eternal loop
            overview.setSelection(ranges, true);
+           }
+           else {
+           plot = $.plot($("#placeholder"),  [{data: d2, label:"Time = 0"}, {data: d2, label:"Count per Day = 0"}],
+                         $.extend(true, {}, options, {
+                             xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
+                         }));
+
+           // don't fire event on the overview to prevent eternal loop
+           overview.setSelection(ranges, true);
+           }
          });
          
           $("#showAll").click(function () {
+            if(!graph1Set) {
+              plot2 = $.plot($("#placeholder"), [{data: d2, label:"Time = 0"}, {data: d2, label:"Count per Day = 0"}], options);
+              plot2.clearSelection();
+              overview.clearSelection();
+              }
+            else {
               plot = $.plot($("#placeholder"), [{data: d, label:"Time = 0"}, {data: d, label:"Count = 0"}], options);
               plot.clearSelection();
               overview.clearSelection();
+            }
+          });
+          
+          $("#showChangeGraph").click(function () {
+            if(graph1Set) {
+              plot2 = $.plot($("#placeholder"), [{data: d2, label:"Time = 0"}, {data: d2, label:"Count per Day = 0"}], options);
+              plot2.clearSelection();
+              overview.clearSelection();
+              graph1Set = false;
+              }
+            else {
+              plot = $.plot($("#placeholder"), [{data: d, label:"Time = 0"}, {data: d, label:"Count = 0"}], options);
+              plot.clearSelection();
+              overview.clearSelection();
+              graph1Set = true;
+            }
           });
 
          $("#overview").bind("plotselected", function (event, ranges) {
-           plot.setSelection(ranges);
+           if(graph1Set) {
+               plot.setSelection(ranges);
+           }
+           else {
+               plot2.setSelection(ranges);
+           }
          });
 
          // populate select 

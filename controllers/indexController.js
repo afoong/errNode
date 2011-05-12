@@ -43,6 +43,10 @@ var finishedErrorGroupTime =  function(res, gName, gIds, gMsgs) {
    if(groupTimePackage['data'] == undefined) {
       groupTimePackage['data'] = new Array();
    }
+   
+   if(groupTimePackage['data2'] == undefined) {
+      groupTimePackage['data2'] = new Array();
+   }
 
    if (groupTimePackage['names'] == undefined) {
       groupTimePackage['names'] = new Array();
@@ -57,6 +61,7 @@ var finishedErrorGroupTime =  function(res, gName, gIds, gMsgs) {
    }
       
    groupTimePackage['data'].push(groupTime);
+   groupTimePackage['data2'].push(groupChangeTime);
    groupTimePackage['names'].push(gName);
    groupTimePackage['gids'].push(gIds);
    groupTimePackage['messages'].push(gMsgs);
@@ -117,6 +122,7 @@ var setGroupTime = function (errorGroup, gID, gMsg, res) {
    }
 
    groupTime = new Array();
+   groupChangeTime = new Array();
    var numYears = 0;
    var idTxt = (''+gID);
    var groupID = idTxt.substring(idTxt.length-9, idTxt.length);
@@ -131,16 +137,34 @@ var setGroupTime = function (errorGroup, gID, gMsg, res) {
    {
       grpName.push(errorGroup[0].msg.split(/[ ]+/)[idx]);
    }
+
+   var dayChange = 1;
+   var lastTime = 0;
+   var currTime = 0;
+   
    
    for (idx = 0; idx < errorGroup.length; idx++) {
 
       grpMessages.push(errorGroup[idx].msg);
+
+      currTime = errorGroup[idx].time * 1000;
       
       if(groupTime[idx] == undefined) {
          groupTime[idx] = new Array();
       }
+
+      var lastDate = new Date(lastTime);
+      var currDate = new Date(currTime);
+
+      if(lastTime != 0 && ((currDate.getDate() != lastDate.getDate()) || (lastDate.getFullYear() != currDate.getFullYear()))) {
+         groupChangeTime.push(new Array(lastTime, dayChange));
+         dayChange = 1;
+      }
+
+      dayChange++;
+
       groupTime[idx][0] = errorGroup[idx].time * 1000;
-      groupTime[idx][1] = idx;
+      groupTime[idx][1] = idx + 1;
 
       //console.log(errorGroup[idx].msg.split(/[ ]+/));
 
@@ -157,6 +181,8 @@ var setGroupTime = function (errorGroup, gID, gMsg, res) {
             grpName.push('*');
          }
       }
+
+      lastTime = currTime;
    }
    //console.log("\n\n");
    
@@ -272,6 +298,7 @@ var errorsInGroup = 0;
 var numErrors = 0;
 var groupID = "";
 var groupTime = new Array();
+var groupChangeTime = new Array();
 var groupsTimes = new Array();
 var groupTimePackage = {};
 var eGrpCounts = new Array();
