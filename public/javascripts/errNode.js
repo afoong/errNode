@@ -127,8 +127,10 @@ $(document).ready(function(){
 
     $("#placeholder").bind("plotclick", function (event, pos, item) {
         if (item) {
+         if(graph1Set) {
             $("#clickdata").show().text("The " + item.datapoint[1] + 'th error in this group was created on ' + new Date(item.datapoint[0]));
             plot.highlight(item.series, item.datapoint);
+            }
         }
     });
 
