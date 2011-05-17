@@ -1,19 +1,4 @@
 $(document).ready(function(){
-       
-   // hides images when you click them
-   $(".dino").each(function() {
-      $(this).click(function(){
-         $(this).parent().parent().fadeToggle();
-      });
-   });
-
-   // hides the month data on year click
-   $(".year").each(function() {
-      $(this).click(function() {
-         
-         $(this).siblings().fadeToggle();
-      });
-   });
 
    var currVal = 0;
    var numGraphs = 0;
@@ -353,6 +338,8 @@ $(document).ready(function(){
       }
          $('#selector').find(' option:selected', 'select').removeAttr('selected').next('option').attr('selected', 'selected');
          $('#selector').trigger('change');
+
+         $('#clickdata').hide();
    });
             
    $("#selector").change(function () {

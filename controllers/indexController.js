@@ -145,7 +145,7 @@ var setGroupTime = function (errorGroup, gID, gMsg, res) {
    
    for (idx = 0; idx < errorGroup.length; idx++) {
 
-      grpMessages.push(errorGroup[idx].msg);
+      grpMessages.push(errorGroup[idx].msg.substring(0,150));
 
       currTime = errorGroup[idx].time * 1000;
       
@@ -187,49 +187,6 @@ var setGroupTime = function (errorGroup, gID, gMsg, res) {
    //console.log("\n\n");
    
    finishedErrorGroupTime(res, grpName.join(' '), idTxt, grpMessages/* + ' --was-- ' + gMsg*/);
-}
-
-var setGroup = function (errorGroup, gID, res) {
-   errorsInGroup = errorGroup.length;
-
-   // label: groupName
-   // data: (year, # errors)
-
-   var idx = 0;
-
-   // creates a super array!
-   //    allTime
-   //       year#.year = e.x. 2010
-   //       year#.month#.month = ex.x 5 (june; months are 0-11)
-   //       year#.month# = array of Errors - each Error is an error with time == m#/y#
-   //       
-   var numYears = 0;
-   
-   for (idx = 0; idx < errorGroup.length; idx++) {
-      var egDate = new Date(errorGroup[idx].time * 1000);
-      var y = egDate.getFullYear().toString();
-
-      if(groupErrors[gID].data == undefined) {
-         groupErrors[gID].data = new Array();
-      }
-
-      var neverSet = true;
-      
-      groupErrors[gID].data.forEach(function (yr) {
-         if(yr[0] == egDate.getFullYear()) {
-            yr[1]++;
-            neverSet = false;
-         }
-      });
-
-      if(neverSet) {
-         var yearData = [egDate.getFullYear(), 1];
-         
-         groupErrors[gID].data.push(yearData);
-      }
-   }
-   
-   //finishedErrorGroup(res);
 }
 
 var setErrorGroupArray = function (errorGroup, res) {
@@ -312,6 +269,7 @@ var sorterfun = function(a, b) {
 
 var turningSeriesDocument = function(timeDataSet) {
    var doc = {};
+   
    for(var i = 0; i < timeDataSet.data.length; i++) {
       doc[""+timeDataSet.names[i]] = {};
       doc[""+timeDataSet.names[i]].label = ""+timeDataSet.names[i];
